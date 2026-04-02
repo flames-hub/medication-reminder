@@ -58,10 +58,13 @@ export function generateScheduleForDate(
   for (const med of medications) {
     if (!isMedicationScheduledForDate(med, dateStr)) continue;
     for (const time of med.times) {
+      // Normalize time to hh:mm to ensure correct ISO format and lexicographic sort
+      const [h, m] = time.split(':');
+      const normalizedTime = `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
       schedule.push({
         medicationId: med.id,
-        scheduledAt: `${dateStr}T${time}:00`,
-        time,
+        scheduledAt: `${dateStr}T${normalizedTime}:00`,
+        time: normalizedTime,
       });
     }
   }
