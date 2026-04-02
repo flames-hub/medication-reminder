@@ -1,0 +1,59 @@
+{
+  "app": { "name": "お薬リマインダー" },
+  "tabs": { "today": "今日", "medications": "お薬", "history": "履歴", "settings": "設定" },
+  "today": {
+    "title": "今日のお薬",
+    "allDone": "今日のお薬は全て飲みました！",
+    "progress": "{{done}} / {{total}} 服薬済み",
+    "taken": "服薬済み",
+    "take": "飲む",
+    "skip": "スキップ"
+  },
+  "medication": {
+    "add": "お薬を追加",
+    "edit": "お薬を編集",
+    "name": "薬の名前",
+    "dosage": "用量",
+    "unit": "単位",
+    "photo": "写真",
+    "frequency": "頻度",
+    "daily": "毎日",
+    "weekly": "曜日指定",
+    "interval": "○日おき",
+    "intervalDays": "{{count}}日おき",
+    "times": "時間",
+    "addTime": "時間を追加",
+    "startDate": "開始日",
+    "endDate": "終了日（任意）",
+    "note": "メモ（例: 食後）",
+    "units": { "mg": "mg", "ml": "ml", "tablet": "錠", "capsule": "カプセル", "drop": "滴", "other": "その他" },
+    "weekdays": { "0": "日", "1": "月", "2": "火", "3": "水", "4": "木", "5": "金", "6": "土" }
+  },
+  "history": {
+    "title": "服薬履歴",
+    "adherence": "遵守率: {{percent}}%",
+    "legend": { "allTaken": "全て飲んだ", "partial": "一部飲み忘れ", "allMissed": "飲み忘れ", "none": "薬なし" }
+  },
+  "settings": {
+    "title": "設定",
+    "notifications": "通知音",
+    "uiSize": "UIサイズ",
+    "uiStandard": "標準",
+    "uiLarge": "大きめ",
+    "subscribe": "Proに登録",
+    "subscribeDesc": "薬無制限、PDF/CSV出力、ウィジェット、UIサイズ変更",
+    "restore": "購入を復元",
+    "price": "{{price}}/月"
+  },
+  "paywall": {
+    "title": "Proを解除",
+    "feature1": "お薬の登録数無制限",
+    "feature2": "PDF服薬レポート",
+    "feature3": "CSV出力",
+    "feature4": "ホーム画面ウィジェット",
+    "feature5": "大きめUIサイズ",
+    "purchase": "登録する — {{price}}/月",
+    "restore": "購入を復元"
+  },
+  "common": { "cancel": "キャンセル", "save": "保存", "delete": "削除", "done": "完了" }
+}

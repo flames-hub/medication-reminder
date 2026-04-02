@@ -1,0 +1,59 @@
+{
+  "app": { "name": "Medication Reminder" },
+  "tabs": { "today": "Today", "medications": "Meds", "history": "History", "settings": "Settings" },
+  "today": {
+    "title": "Today's Medications",
+    "allDone": "All done for today!",
+    "progress": "{{done}} of {{total}} taken",
+    "taken": "Taken",
+    "take": "Take",
+    "skip": "Skip"
+  },
+  "medication": {
+    "add": "Add Medication",
+    "edit": "Edit Medication",
+    "name": "Medication Name",
+    "dosage": "Dosage",
+    "unit": "Unit",
+    "photo": "Photo",
+    "frequency": "Frequency",
+    "daily": "Every day",
+    "weekly": "Specific days",
+    "interval": "Every X days",
+    "intervalDays": "Every {{count}} days",
+    "times": "Times",
+    "addTime": "Add Time",
+    "startDate": "Start Date",
+    "endDate": "End Date (optional)",
+    "note": "Note (e.g., after meals)",
+    "units": { "mg": "mg", "ml": "ml", "tablet": "tablet", "capsule": "capsule", "drop": "drop", "other": "other" },
+    "weekdays": { "0": "Sun", "1": "Mon", "2": "Tue", "3": "Wed", "4": "Thu", "5": "Fri", "6": "Sat" }
+  },
+  "history": {
+    "title": "Medication History",
+    "adherence": "Adherence: {{percent}}%",
+    "legend": { "allTaken": "All taken", "partial": "Partial", "allMissed": "Missed", "none": "No meds" }
+  },
+  "settings": {
+    "title": "Settings",
+    "notifications": "Notification Sound",
+    "uiSize": "UI Size",
+    "uiStandard": "Standard",
+    "uiLarge": "Large",
+    "subscribe": "Subscribe to Pro",
+    "subscribeDesc": "Unlimited meds, PDF/CSV export, widget, UI size",
+    "restore": "Restore Purchase",
+    "price": "{{price}}/month"
+  },
+  "paywall": {
+    "title": "Unlock Pro",
+    "feature1": "Unlimited medications",
+    "feature2": "PDF health reports",
+    "feature3": "CSV export",
+    "feature4": "Home screen widget",
+    "feature5": "Large UI option",
+    "purchase": "Subscribe — {{price}}/mo",
+    "restore": "Restore Purchase"
+  },
+  "common": { "cancel": "Cancel", "save": "Save", "delete": "Delete", "done": "Done" }
+}
