@@ -1,7 +1,7 @@
 import './src/i18n';  // must be first import
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import Purchases from 'react-native-purchases';
+import { ActivityIndicator, Platform, View } from 'react-native';
+import Constants from 'expo-constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { getDatabase } from './src/db/database';
 import { useMedicationStore } from './src/store/medicationStore';
@@ -12,6 +12,21 @@ import { requestNotificationPermission, setupNotificationHandler } from './src/u
 // Replace with actual RevenueCat API keys when available
 const REVENUECAT_API_KEY_IOS = 'appl_PLACEHOLDER_KEY';
 const REVENUECAT_API_KEY_ANDROID = 'goog_PLACEHOLDER_KEY';
+
+async function initRevenueCat(setIsPro: (v: boolean) => void) {
+  // Skip RevenueCat in Expo Go — native module not available
+  if (Constants.appOwnership === 'expo') return;
+  try {
+    const Purchases = (await import('react-native-purchases')).default;
+    const apiKey = Platform.OS === 'ios' ? REVENUECAT_API_KEY_IOS : REVENUECAT_API_KEY_ANDROID;
+    Purchases.configure({ apiKey });
+    const customerInfo = await Purchases.getCustomerInfo();
+    const isPro = customerInfo.entitlements.active['pro'] != null;
+    setIsPro(isPro);
+  } catch (rcErr) {
+    console.warn('RevenueCat init failed:', rcErr);
+  }
+}
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -37,17 +52,8 @@ export default function App() {
         setupNotificationHandler();
         requestNotificationPermission().catch(() => {});
 
-        // 6. Configure RevenueCat
-        try {
-          Purchases.configure({
-            apiKey: REVENUECAT_API_KEY_IOS,
-          });
-          const customerInfo = await Purchases.getCustomerInfo();
-          const isPro = customerInfo.entitlements.active['pro'] != null;
-          setIsPro(isPro);
-        } catch (rcErr) {
-          console.warn('RevenueCat init failed (expected in dev without real key):', rcErr);
-        }
+        // 6. Configure RevenueCat (skipped in Expo Go)
+        await initRevenueCat(setIsPro);
       } catch (err) {
         console.error('App init error:', err);
       } finally {
