@@ -41,7 +41,12 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       const raw = await AsyncStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        set({ ...saved, isLoaded: true });
+        set({
+          isPro: !!saved.isPro,
+          uiSize: saved.uiSize ?? 'standard',
+          notificationsEnabled: saved.notificationsEnabled !== false,
+          isLoaded: true,
+        });
       } else {
         set({ isLoaded: true });
       }

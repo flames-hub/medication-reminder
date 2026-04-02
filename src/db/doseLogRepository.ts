@@ -7,7 +7,7 @@ export async function getDoseLogsForDate(date: string): Promise<DoseLog[]> {
     "SELECT * FROM dose_logs WHERE scheduledAt LIKE ? ORDER BY scheduledAt ASC",
     [`${date}%`]
   );
-  return rows.map((r) => ({ ...r, skipped: !!r.skipped }));
+  return rows.map((r) => ({ ...r, skipped: r.skipped === 1 }));
 }
 
 export async function getDoseLogsForMonth(yearMonth: string): Promise<DoseLog[]> {
@@ -16,7 +16,7 @@ export async function getDoseLogsForMonth(yearMonth: string): Promise<DoseLog[]>
     "SELECT * FROM dose_logs WHERE scheduledAt LIKE ? ORDER BY scheduledAt ASC",
     [`${yearMonth}%`]
   );
-  return rows.map((r) => ({ ...r, skipped: !!r.skipped }));
+  return rows.map((r) => ({ ...r, skipped: r.skipped === 1 }));
 }
 
 export async function upsertDoseLog(log: DoseLog): Promise<void> {
@@ -33,5 +33,5 @@ export async function getDoseLogsForMedication(medicationId: string): Promise<Do
     "SELECT * FROM dose_logs WHERE medicationId=? ORDER BY scheduledAt ASC",
     [medicationId]
   );
-  return rows.map((r) => ({ ...r, skipped: !!r.skipped }));
+  return rows.map((r) => ({ ...r, skipped: r.skipped === 1 }));
 }
