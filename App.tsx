@@ -7,7 +7,7 @@ import { getDatabase } from './src/db/database';
 import { useMedicationStore } from './src/store/medicationStore';
 import { useSettingsStore } from './src/store/settingsStore';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { requestNotificationPermission } from './src/utils/notifications';
+import { requestNotificationPermission, setupNotificationHandler } from './src/utils/notifications';
 
 // Replace with actual RevenueCat API keys when available
 const REVENUECAT_API_KEY_IOS = 'appl_PLACEHOLDER_KEY';
@@ -33,7 +33,8 @@ export default function App() {
         // 4. Load today's schedule
         await loadTodaySchedule();
 
-        // 5. Request notification permission (non-blocking)
+        // 5. Setup notifications
+        setupNotificationHandler();
         requestNotificationPermission().catch(() => {});
 
         // 6. Configure RevenueCat
