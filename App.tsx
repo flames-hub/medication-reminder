@@ -49,8 +49,8 @@ export default function App() {
         await loadTodaySchedule();
 
         // 5. Setup notifications
-        setupNotificationHandler();
-        requestNotificationPermission().catch(() => {});
+        await setupNotificationHandler();
+        await requestNotificationPermission().catch(() => {});
 
         // 6. Configure RevenueCat (skipped in Expo Go)
         await initRevenueCat(setIsPro);
