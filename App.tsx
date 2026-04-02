@@ -7,7 +7,7 @@ import { getDatabase } from './src/db/database';
 import { useMedicationStore } from './src/store/medicationStore';
 import { useSettingsStore } from './src/store/settingsStore';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { requestNotificationPermission, setupNotificationHandler } from './src/utils/notifications';
+// notifications lazy-loaded to avoid Expo Go crash
 
 // Replace with actual RevenueCat API keys when available
 const REVENUECAT_API_KEY_IOS = 'appl_PLACEHOLDER_KEY';
@@ -48,9 +48,12 @@ export default function App() {
         // 4. Load today's schedule
         await loadTodaySchedule();
 
-        // 5. Setup notifications
-        await setupNotificationHandler();
-        await requestNotificationPermission().catch(() => {});
+        // 5. Setup notifications (skip in Expo Go)
+        if (Constants.appOwnership !== 'expo') {
+          const { setupNotificationHandler, requestNotificationPermission } = await import('./src/utils/notifications');
+          await setupNotificationHandler();
+          await requestNotificationPermission().catch(() => {});
+        }
 
         // 6. Configure RevenueCat (skipped in Expo Go)
         await initRevenueCat(setIsPro);
