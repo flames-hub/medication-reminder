@@ -1,37 +1,34 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Radius } from '../constants/theme';
+import { Card } from './GlassCard';
 import { DayStatus } from '../types';
-import { useColorScheme } from 'react-native';
+import { useTheme } from '../hooks/useTheme';
 
 interface Props {
   dayStatuses: Record<string, DayStatus>;
   onDayPress: (dateStr: string) => void;
-  currentMonth: string; // 'YYYY-MM'
+  currentMonth: string;
   onMonthChange: (yearMonth: string) => void;
 }
 
-const STATUS_COLORS: Record<DayStatus, string> = {
-  all_taken: '#16A34A',
-  partial: '#F59E0B',
-  all_missed: '#DC2626',
-  none: 'transparent',
-};
-
 export function CalendarHeatmap({ dayStatuses, onDayPress, currentMonth, onMonthChange }: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
+  const { colors } = useTheme();
+
+  const statusColors: Record<DayStatus, string> = {
+    all_taken: colors.success,
+    partial: colors.warning,
+    all_missed: colors.error,
+    none: 'transparent',
+  };
 
   const markedDates = Object.entries(dayStatuses).reduce<Record<string, object>>(
     (acc, [date, status]) => {
       if (status === 'none') return acc;
       acc[date] = {
         customStyles: {
-          container: {
-            backgroundColor: STATUS_COLORS[status],
-            borderRadius: BorderRadius.sm,
-          },
+          container: { backgroundColor: statusColors[status], borderRadius: Radius.sm },
           text: { color: '#fff', fontWeight: '600' },
         },
       };
@@ -41,7 +38,7 @@ export function CalendarHeatmap({ dayStatuses, onDayPress, currentMonth, onMonth
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderRadius: BorderRadius.lg }]}>
+    <Card style={styles.container}>
       <Calendar
         current={`${currentMonth}-01`}
         markingType="custom"
@@ -59,7 +56,7 @@ export function CalendarHeatmap({ dayStatuses, onDayPress, currentMonth, onMonth
           selectedDayBackgroundColor: colors.primary,
         }}
       />
-    </View>
+    </Card>
   );
 }
 

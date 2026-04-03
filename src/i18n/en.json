@@ -2,12 +2,16 @@
   "app": { "name": "Medication Reminder" },
   "tabs": { "today": "Today", "medications": "Meds", "history": "History", "settings": "Settings" },
   "today": {
-    "title": "Today's Medications",
-    "allDone": "All done for today!",
+    "title": "Today's Meds",
+    "allDone": "All done! Great job today",
     "progress": "{{done}} of {{total}} taken",
-    "taken": "Taken",
+    "taken": "Taken!",
+    "skipped": "Skipped",
     "take": "Take",
-    "skip": "Skip"
+    "skip": "Skip",
+    "empty": "No meds scheduled today",
+    "emptyHint": "Add medications in the Meds tab to get started",
+    "instruction": "Tap \"Take\" when you've taken your medication"
   },
   "medication": {
     "add": "Add Medication",
@@ -16,9 +20,9 @@
     "dosage": "Dosage",
     "unit": "Unit",
     "photo": "Photo",
-    "frequency": "Frequency",
+    "frequency": "When to take?",
     "daily": "Every day",
-    "weekly": "Specific days",
+    "weekly": "Pick days",
     "interval": "Every X days",
     "intervalDays": "Every {{count}} days",
     "times": "Times",
@@ -29,31 +33,59 @@
     "units": { "mg": "mg", "ml": "ml", "tablet": "tablet", "capsule": "capsule", "drop": "drop", "other": "other" },
     "weekdays": { "0": "Sun", "1": "Mon", "2": "Tue", "3": "Wed", "4": "Thu", "5": "Fri", "6": "Sat" }
   },
+  "medList": {
+    "emptyTitle": "No medications yet",
+    "emptyBody": "Tap the + button below\nto add your first medication",
+    "deleteConfirm": "Delete \"{{name}}\"?\nThis will also remove all dose records.",
+    "freeCount": "{{count}} / {{limit}} registered (Free plan)"
+  },
+  "form": {
+    "hint": "Set the name, dosage, and timing for your medication. You can edit these later.",
+    "namePlaceholder": "e.g., Ibuprofen",
+    "frequencyHint": "Choose how often you take this medication",
+    "timeHint": "You'll get a reminder notification at these times",
+    "error": "Input Error",
+    "nameRequired": "Please enter a medication name",
+    "dosageRequired": "Please enter a dosage greater than 0",
+    "timeRequired": "Please add at least one time"
+  },
   "history": {
-    "title": "Medication History",
+    "title": "Your History",
     "adherence": "Adherence: {{percent}}%",
+    "adherenceHint": "Tap a date to see details for that day",
+    "tapHint": "Tap any date on the calendar",
     "legend": { "allTaken": "All taken", "partial": "Partial", "allMissed": "Missed", "none": "No meds" }
   },
   "settings": {
     "title": "Settings",
-    "notifications": "Notification Sound",
-    "uiSize": "UI Size",
+    "theme": "Theme Color",
+    "notifications": "Notifications",
+    "notificationsDesc": "Remind me at medication times",
+    "uiSize": "Text Size",
+    "uiSizeDesc": "Large text is available with Pro",
     "uiStandard": "Standard",
     "uiLarge": "Large",
-    "subscribe": "Subscribe to Pro",
-    "subscribeDesc": "Unlimited meds, PDF/CSV export, widget, UI size",
+    "subscribe": "Upgrade to Pro",
+    "subscribeDesc": "Unlimited meds, PDF/CSV export, widget, text size options",
     "restore": "Restore Purchase",
-    "price": "{{price}}/month"
+    "price": "{{price}}/month",
+    "about": "About This App",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "version": "Version",
+    "madeWith": "Made with care for your health"
   },
   "paywall": {
     "title": "Unlock Pro",
+    "description": "Get the most out of your medication tracking with these extra features.",
     "feature1": "Unlimited medications",
     "feature2": "PDF health reports",
-    "feature3": "CSV export",
+    "feature3": "CSV data export",
     "feature4": "Home screen widget",
-    "feature5": "Large UI option",
+    "feature5": "Large text option",
     "purchase": "Subscribe — {{price}}/mo",
-    "restore": "Restore Purchase"
+    "restore": "Restore Purchase",
+    "terms": "By subscribing, you agree to our Terms of Use and Privacy Policy. Subscriptions auto-renew and will be charged unless cancelled at least 24 hours before the renewal date."
   },
-  "common": { "cancel": "Cancel", "save": "Save", "delete": "Delete", "done": "Done" }
+  "common": { "cancel": "Cancel", "save": "Save", "delete": "Delete", "edit": "Edit", "done": "Done" }
 }

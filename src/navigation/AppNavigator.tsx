@@ -1,10 +1,10 @@
 import React from 'react';
-import { useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
 import { TodayScreen } from '../screens/TodayScreen';
 import { MedicationListScreen } from '../screens/MedicationListScreen';
 import { AddMedicationScreen } from '../screens/AddMedicationScreen';
@@ -23,25 +23,35 @@ export type TabParamList = {
   Settings: undefined;
 };
 
+const TAB_ICONS: Record<keyof TabParamList, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }> = {
+  Today: { active: 'today', inactive: 'today-outline' },
+  MedicationList: { active: 'medkit', inactive: 'medkit-outline' },
+  History: { active: 'calendar', inactive: 'calendar-outline' },
+  Settings: { active: 'settings', inactive: 'settings-outline' },
+};
+
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function TabNavigator() {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         lazy: true,
+        tabBarIcon: ({ focused, color, size }) => {
+          const icons = TAB_ICONS[route.name];
+          return <Ionicons name={focused ? icons.active : icons.inactive} size={size} color={color} />;
+        },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         headerStyle: { backgroundColor: colors.surface },
         headerTintColor: colors.text,
         headerShadowVisible: false,
-      }}
+      })}
     >
       <Tab.Screen name="Today" component={TodayScreen} options={{ title: t('tabs.today'), tabBarLabel: t('tabs.today') }} />
       <Tab.Screen name="MedicationList" component={MedicationListScreen} options={{ title: t('tabs.medications'), tabBarLabel: t('tabs.medications') }} />
@@ -52,8 +62,7 @@ function TabNavigator() {
 }
 
 export function AppNavigator() {
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
+  const { colors } = useTheme();
 
   return (
     <NavigationContainer>

@@ -2,18 +2,14 @@ import React, { useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
-import { useSettingsStore } from '../store/settingsStore';
 import { ProgressRing } from '../components/ProgressRing';
 import { DoseCard } from '../components/DoseCard';
-import { Colors, Spacing, FontSize } from '../constants/theme';
-import { useColorScheme } from 'react-native';
+import { Spacing, Shadow } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
 
 export function TodayScreen() {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
-  const { uiSize } = useSettingsStore();
-  const fontSize = FontSize[uiSize];
+  const { colors, fontSize } = useTheme();
   const { todaySchedule, isLoading, loadTodaySchedule, takeDose, skipDose, getTodayStats } = useMedicationStore();
   const stats = getTodayStats();
 
@@ -29,17 +25,22 @@ export function TodayScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+      <View style={[styles.header, { backgroundColor: colors.surface }, Shadow.sm]}>
         <ProgressRing done={stats.done} total={stats.total} />
-        <Text style={[styles.progressText, { color: colors.textSecondary, fontSize: fontSize.md, marginTop: Spacing.sm }]}>
+        <Text style={{ color: colors.textSecondary, fontSize: fontSize.md, marginTop: Spacing.sm }}>
           {t('today.progress', { done: stats.done, total: stats.total })}
         </Text>
         {allDone && (
-          <Text style={[styles.allDoneText, { color: colors.success, fontSize: fontSize.lg }]}>
-            🎉 {t('today.allDone')}
+          <Text style={{ color: colors.success, fontSize: fontSize.lg, fontWeight: '600', marginTop: Spacing.xs }}>
+            {t('today.allDone')}
           </Text>
         )}
       </View>
+      {stats.total > 0 && !allDone && (
+        <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, paddingHorizontal: Spacing.md, paddingTop: Spacing.md }}>
+          {t('today.instruction')}
+        </Text>
+      )}
       <FlatList
         data={todaySchedule}
         keyExtractor={(item) => item.logId}
@@ -59,9 +60,14 @@ export function TodayScreen() {
           />
         )}
         ListEmptyComponent={
-          <Text style={[styles.empty, { color: colors.muted, fontSize: fontSize.md }]}>
-            {t('today.allDone')}
-          </Text>
+          <View style={styles.emptyWrap}>
+            <Text style={{ color: colors.muted, fontSize: fontSize.md, textAlign: 'center' }}>
+              {t('today.empty')}
+            </Text>
+            <Text style={{ color: colors.muted, fontSize: fontSize.sm, textAlign: 'center', marginTop: Spacing.xs }}>
+              {t('today.emptyHint')}
+            </Text>
+          </View>
         }
       />
     </View>
@@ -71,9 +77,7 @@ export function TodayScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   loader: { flex: 1, justifyContent: 'center' },
-  header: { alignItems: 'center', paddingVertical: Spacing.lg, borderBottomWidth: 1 },
-  progressText: { marginTop: Spacing.xs },
-  allDoneText: { marginTop: Spacing.sm, fontWeight: '600' },
+  header: { alignItems: 'center', paddingVertical: Spacing.lg },
   list: { padding: Spacing.md },
-  empty: { textAlign: 'center', marginTop: Spacing.xl },
+  emptyWrap: { marginTop: Spacing.xl * 2, paddingHorizontal: Spacing.lg },
 });

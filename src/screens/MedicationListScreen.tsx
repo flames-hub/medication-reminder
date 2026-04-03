@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View, FlatList, Text, TouchableOpacity, Image, StyleSheet, Alert, Animated,
-} from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { PaywallModal } from '../components/PaywallModal';
-import { Colors, Spacing, FontSize, BorderRadius } from '../constants/theme';
-import { useColorScheme } from 'react-native';
+import { Card } from '../components/GlassCard';
+import { Spacing, Shadow } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 const FREE_LIMIT = 3;
 
 export function MedicationListScreen() {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
-  const { uiSize, isPro } = useSettingsStore();
-  const fontSize = FontSize[uiSize];
+  const { colors, fontSize } = useTheme();
+  const { isPro } = useSettingsStore();
   const { medications, loadMedications, removeMedication } = useMedicationStore();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [showPaywall, setShowPaywall] = useState(false);
@@ -41,7 +39,7 @@ export function MedicationListScreen() {
   }
 
   function handleDelete(id: string, name: string) {
-    Alert.alert(t('common.delete'), `${name}?`, [
+    Alert.alert(t('common.delete'), t('medList.deleteConfirm', { name }), [
       { text: t('common.cancel'), style: 'cancel' },
       { text: t('common.delete'), style: 'destructive', onPress: () => removeMedication(id) },
     ]);
@@ -49,47 +47,65 @@ export function MedicationListScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {!isPro && medications.length > 0 && (
+        <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, paddingHorizontal: Spacing.md, paddingTop: Spacing.md }}>
+          {t('medList.freeCount', { count: medications.length, limit: FREE_LIMIT })}
+        </Text>
+      )}
       <FlatList
         data={medications}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: BorderRadius.md }]}>
-            {item.photoUri ? (
-              <Image source={{ uri: item.photoUri }} style={styles.photo} />
-            ) : (
-              <View style={[styles.photoPlaceholder, { backgroundColor: colors.primaryLight }]} />
-            )}
-            <View style={styles.info}>
-              <Text style={[styles.name, { color: colors.text, fontSize: fontSize.lg }]}>{item.name}</Text>
-              <Text style={[styles.detail, { color: colors.textSecondary, fontSize: fontSize.sm }]}>
-                {item.dosage} {t(`medication.units.${item.unit}`)} · {t(`medication.${item.frequency}`)}
-              </Text>
-              <Text style={[styles.detail, { color: colors.muted, fontSize: fontSize.sm }]}>
-                {item.times.join(', ')}
-              </Text>
+          <Card style={{ padding: Spacing.md, marginBottom: Spacing.sm }}>
+            <View style={styles.cardRow}>
+              {item.photoUri ? (
+                <Image source={{ uri: item.photoUri }} style={styles.photo} />
+              ) : (
+                <View style={[styles.iconWrap, { backgroundColor: colors.primaryMuted }]}>
+                  <Ionicons name="medical" size={20} color={colors.primary} />
+                </View>
+              )}
+              <View style={styles.info}>
+                <Text style={{ color: colors.text, fontSize: fontSize.lg, fontWeight: '600' }}>{item.name}</Text>
+                <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, marginTop: 2 }}>
+                  {item.dosage} {t(`medication.units.${item.unit}`)} · {t(`medication.${item.frequency}`)}
+                </Text>
+                <Text style={{ color: colors.muted, fontSize: fontSize.sm, marginTop: 1 }}>
+                  {item.times.join(', ')}
+                </Text>
+              </View>
+              <View style={styles.actions}>
+                <TouchableOpacity onPress={() => handleEdit(item.id)} hitSlop={8} accessibilityLabel={t('common.edit')} accessibilityRole="button">
+                  <Ionicons name="create-outline" size={20} color={colors.textSecondary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(item.id, item.name)} hitSlop={8} accessibilityLabel={t('common.delete')} accessibilityRole="button">
+                  <Ionicons name="trash-outline" size={20} color={colors.error} />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={() => handleEdit(item.id)} style={styles.actionBtn}>
-                <Text style={{ color: colors.primary, fontSize: fontSize.sm }}>✎</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(item.id, item.name)} style={styles.actionBtn}>
-                <Text style={{ color: colors.error, fontSize: fontSize.sm }}>✕</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          </Card>
         )}
         ListEmptyComponent={
-          <Text style={[styles.empty, { color: colors.muted, fontSize: fontSize.md }]}>
-            {t('medication.add')}
-          </Text>
+          <View style={styles.emptyWrap}>
+            <Ionicons name="medkit-outline" size={48} color={colors.muted} />
+            <Text style={{ color: colors.text, fontSize: fontSize.lg, fontWeight: '600', marginTop: Spacing.md }}>
+              {t('medList.emptyTitle')}
+            </Text>
+            <Text style={{ color: colors.muted, fontSize: fontSize.md, textAlign: 'center', marginTop: Spacing.xs }}>
+              {t('medList.emptyBody')}
+            </Text>
+          </View>
         }
       />
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: colors.primary }]}
+        style={[styles.fab, { backgroundColor: colors.primary }, Shadow.lg]}
         onPress={handleAdd}
+        activeOpacity={0.8}
+        accessibilityLabel={t('medication.add')}
+        accessibilityRole="button"
       >
-        <Text style={styles.fabText}>+</Text>
+        <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
       <PaywallModal
         visible={showPaywall}
@@ -104,15 +120,17 @@ export function MedicationListScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   list: { padding: Spacing.md, paddingBottom: 80 },
-  card: { flexDirection: 'row', alignItems: 'center', padding: Spacing.md, marginBottom: Spacing.sm, borderWidth: 1 },
-  photo: { width: 48, height: 48, borderRadius: 8, marginRight: Spacing.md },
-  photoPlaceholder: { width: 48, height: 48, borderRadius: 8, marginRight: Spacing.md },
+  cardRow: { flexDirection: 'row', alignItems: 'center' },
+  photo: { width: 44, height: 44, borderRadius: 10, marginRight: Spacing.md },
+  iconWrap: {
+    width: 44, height: 44, borderRadius: 10, marginRight: Spacing.md,
+    alignItems: 'center', justifyContent: 'center',
+  },
   info: { flex: 1 },
-  name: { fontWeight: '600', marginBottom: 2 },
-  detail: {},
-  actions: { flexDirection: 'row', gap: Spacing.sm },
-  actionBtn: { padding: Spacing.sm },
-  fab: { position: 'absolute', bottom: Spacing.lg, right: Spacing.lg, width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4 },
-  fabText: { color: '#fff', fontSize: 28, fontWeight: '300', lineHeight: 30 },
-  empty: { textAlign: 'center', marginTop: Spacing.xl },
+  actions: { gap: Spacing.md },
+  fab: {
+    position: 'absolute', bottom: Spacing.lg, right: Spacing.lg,
+    width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center',
+  },
+  emptyWrap: { alignItems: 'center', marginTop: Spacing.xl * 2, paddingHorizontal: Spacing.lg },
 });

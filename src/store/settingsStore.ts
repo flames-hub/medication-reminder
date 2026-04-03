@@ -1,14 +1,16 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UISize } from '../types';
+import { UISize, ThemeId } from '../types';
 
 interface SettingsState {
   isPro: boolean;
   uiSize: UISize;
+  themeId: ThemeId;
   notificationsEnabled: boolean;
   isLoaded: boolean;
   setIsPro: (v: boolean) => void;
   setUISize: (s: UISize) => void;
+  setThemeId: (t: ThemeId) => void;
   setNotificationsEnabled: (v: boolean) => void;
   loadSettings: () => Promise<void>;
 }
@@ -18,6 +20,7 @@ const STORAGE_KEY = '@med_reminder_settings';
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   isPro: false,
   uiSize: 'standard',
+  themeId: 'sakura',
   notificationsEnabled: true,
   isLoaded: false,
 
@@ -29,6 +32,11 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   setUISize: (s) => {
     set({ uiSize: s });
     persistSettings({ ...get(), uiSize: s });
+  },
+
+  setThemeId: (t) => {
+    set({ themeId: t });
+    persistSettings({ ...get(), themeId: t });
   },
 
   setNotificationsEnabled: (v) => {
@@ -44,6 +52,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
         set({
           isPro: !!saved.isPro,
           uiSize: saved.uiSize ?? 'standard',
+          themeId: saved.themeId ?? 'sakura',
           notificationsEnabled: saved.notificationsEnabled !== false,
           isLoaded: true,
         });
@@ -57,6 +66,6 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 }));
 
 function persistSettings(state: SettingsState) {
-  const { isPro, uiSize, notificationsEnabled } = state;
-  AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ isPro, uiSize, notificationsEnabled })).catch(() => {});
+  const { isPro, uiSize, themeId, notificationsEnabled } = state;
+  AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ isPro, uiSize, themeId, notificationsEnabled })).catch(() => {});
 }

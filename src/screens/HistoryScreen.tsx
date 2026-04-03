@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
-import { useSettingsStore } from '../store/settingsStore';
 import { CalendarHeatmap } from '../components/CalendarHeatmap';
-import { Colors, Spacing, FontSize, BorderRadius } from '../constants/theme';
+import { Card } from '../components/GlassCard';
+import { Spacing, Radius, Shadow } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
 import { getYearMonthString } from '../utils/dateUtils';
 import { DayStatus } from '../types';
-import { useColorScheme } from 'react-native';
 
 export function HistoryScreen() {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
-  const { uiSize } = useSettingsStore();
-  const fontSize = FontSize[uiSize];
+  const { colors, fontSize } = useTheme();
   const { getMonthlyAdherence } = useMedicationStore();
 
   const [currentMonth, setCurrentMonth] = useState(getYearMonthString(new Date()));
@@ -41,18 +38,25 @@ export function HistoryScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.adherenceBar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        <Text style={[styles.adherenceText, { color: colors.text, fontSize: fontSize.xl }]}>
+      <Card style={styles.adherenceCard}>
+        <Text style={{ color: colors.text, fontSize: fontSize.xl, fontWeight: '700' }}>
           {t('history.adherence', { percent: adherence })}
         </Text>
+        <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, marginTop: Spacing.xs }}>
+          {t('history.adherenceHint')}
+        </Text>
+      </Card>
+
+      <View style={{ paddingHorizontal: Spacing.md }}>
+        <CalendarHeatmap
+          dayStatuses={dayStatuses}
+          onDayPress={(date) => setSelectedDate(date)}
+          currentMonth={currentMonth}
+          onMonthChange={setCurrentMonth}
+        />
       </View>
-      <CalendarHeatmap
-        dayStatuses={dayStatuses}
-        onDayPress={(date) => setSelectedDate(date)}
-        currentMonth={currentMonth}
-        onMonthChange={setCurrentMonth}
-      />
-      <View style={[styles.legend, { backgroundColor: colors.surface }]}>
+
+      <View style={styles.legend}>
         {(['all_taken', 'partial', 'all_missed', 'none'] as DayStatus[]).map((status) => (
           <View key={status} style={styles.legendItem}>
             <View style={[styles.legendDot, { backgroundColor: statusColor[status] }]} />
@@ -63,10 +67,16 @@ export function HistoryScreen() {
         ))}
       </View>
 
+      <Text style={{ color: colors.muted, fontSize: fontSize.sm, textAlign: 'center', paddingHorizontal: Spacing.lg }}>
+        {t('history.tapHint')}
+      </Text>
+
       <Modal visible={!!selectedDate} animationType="fade" transparent onRequestClose={() => setSelectedDate(null)}>
-        <TouchableOpacity style={styles.modalOverlay} onPress={() => setSelectedDate(null)}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface, borderRadius: BorderRadius.lg }]}>
-            <Text style={[styles.modalTitle, { color: colors.text, fontSize: fontSize.lg }]}>{selectedDate}</Text>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setSelectedDate(null)}>
+          <View style={[styles.modalCard, { backgroundColor: colors.surface, borderRadius: Radius.lg }, Shadow.lg]}>
+            <Text style={{ color: colors.text, fontSize: fontSize.lg, fontWeight: '600', marginBottom: Spacing.md }}>
+              {selectedDate}
+            </Text>
             {selectedDate && (
               <View style={[styles.statusBadge, { backgroundColor: statusColor[dayStatuses[selectedDate] ?? 'none'] }]}>
                 <Text style={{ color: '#fff', fontWeight: '600', fontSize: fontSize.md }}>
@@ -83,13 +93,11 @@ export function HistoryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  adherenceBar: { padding: Spacing.md, borderBottomWidth: 1, alignItems: 'center' },
-  adherenceText: { fontWeight: '700' },
-  legend: { flexDirection: 'row', justifyContent: 'space-around', padding: Spacing.md },
+  adherenceCard: { padding: Spacing.md, margin: Spacing.md, alignItems: 'center' },
+  legend: { flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: Spacing.md, paddingVertical: Spacing.md },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { width: 10, height: 10, borderRadius: 5 },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { padding: Spacing.lg, minWidth: 200, alignItems: 'center' },
-  modalTitle: { fontWeight: '600', marginBottom: Spacing.md },
-  statusBadge: { paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm, borderRadius: 20 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'center', alignItems: 'center' },
+  modalCard: { padding: Spacing.lg, minWidth: 220, alignItems: 'center' },
+  statusBadge: { paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm, borderRadius: Radius.pill },
 });

@@ -24,3 +24,4 @@ export interface DoseLog {
 
 export type DayStatus = 'all_taken' | 'partial' | 'all_missed' | 'none';
 export type UISize = 'standard' | 'large';
+export type ThemeId = 'sakura' | 'mint' | 'honey';
