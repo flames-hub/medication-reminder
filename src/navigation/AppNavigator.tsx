@@ -34,6 +34,7 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
+        lazy: true,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },

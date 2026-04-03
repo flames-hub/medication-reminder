@@ -30,29 +30,25 @@ export default function App() {
   const { loadSettings, setIsPro } = useSettingsStore();
 
   useEffect(() => {
-    async function init() {
+    (async () => {
       try {
         await loadSettings();
         await getDatabase();
         await loadMedications();
         await loadTodaySchedule();
-
-        // Notifications: skip in Expo Go
         if (Constants.appOwnership !== 'expo') {
           const { setupNotificationHandler, requestNotificationPermission } =
             await import('./src/utils/notifications');
           await setupNotificationHandler();
           requestNotificationPermission().catch(() => {});
         }
-
         await initRevenueCat(setIsPro);
       } catch (err) {
         console.error('App init error:', err);
       } finally {
         setReady(true);
       }
-    }
-    init();
+    })();
   }, []);
 
   if (!ready) {
