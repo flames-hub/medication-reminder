@@ -16,17 +16,30 @@
     },
     "android": {
       "package": "com.tama.medreminder",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
-    "plugins": ["expo-notifications", "expo-localization", "expo-image-picker"],
+    "plugins": [
+      "expo-notifications",
+      "expo-localization",
+      "expo-image-picker"
+    ],
     "updates": {
-      "url": "https://u.expo.dev/YOUR_PROJECT_ID",
+      "url": "https://u.expo.dev/6e419564-2e08-4278-8fc8-45d9d57393f6",
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6e419564-2e08-4278-8fc8-45d9d57393f6"
+      }
+    },
+    "owner": "tama_lab"
   }
 }
