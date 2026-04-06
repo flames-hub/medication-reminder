@@ -4,6 +4,7 @@
     "slug": "medication-reminder",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.tama.medreminder",
@@ -11,7 +12,8 @@
       "supportsTablet": false,
       "infoPlist": {
         "NSCameraUsageDescription": "Take photos of your medication",
-        "NSPhotoLibraryUsageDescription": "Select photos of your medication"
+        "NSPhotoLibraryUsageDescription": "Select photos of your medication",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
