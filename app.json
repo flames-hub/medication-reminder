@@ -18,6 +18,15 @@
       "package": "com.tama.medreminder",
       "versionCode": 1
     },
-    "plugins": ["expo-notifications", "expo-localization", "expo-image-picker"]
+    "plugins": ["expo-notifications", "expo-localization", "expo-image-picker"],
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_PROJECT_ID",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
