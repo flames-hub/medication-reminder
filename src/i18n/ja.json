@@ -50,7 +50,7 @@
     "emptyTitle": "おくすりがまだないよ",
     "emptyBody": "右下の＋ボタンから\n最初のおくすりを登録しよう",
     "deleteConfirm": "「{{name}}」を削除しますか？\n服薬記録も削除されます。",
-    "freeCount": "{{count}} / {{limit}} 件登録中（無料プラン）"
+    "freeCount": "{{count}} / {{limit}} 件登録中"
   },
   "form": {
     "hint": "お薬の名前・量・飲むタイミングを設定してね。あとから編集もできるよ。",
@@ -80,30 +80,14 @@
     "notifications": "通知",
     "notificationsDesc": "服薬時間にリマインド通知",
     "uiSize": "文字サイズ",
-    "uiSizeDesc": "おおきめは Pro プランで使えるよ",
+    "uiSizeDesc": "画面に合わせて文字の大きさを選べるよ",
     "uiStandard": "ふつう",
     "uiLarge": "おおきめ",
-    "subscribe": "Pro にアップグレード",
-    "subscribeDesc": "おくすり無制限・PDF/CSV出力・ウィジェット・文字サイズ変更",
-    "restore": "購入を復元",
-    "price": "{{price}}/月",
     "about": "このアプリについて",
     "privacy": "プライバシーポリシー",
     "terms": "利用規約・免責事項",
     "version": "バージョン",
     "madeWith": "Made with care for your health"
-  },
-  "paywall": {
-    "title": "Pro でもっと便利に",
-    "description": "毎日のおくすり管理をもっと快適にする機能が使えるようになるよ。",
-    "feature1": "おくすりの登録数が無制限に",
-    "feature2": "PDF で服薬レポートを出力",
-    "feature3": "CSV でデータをエクスポート",
-    "feature4": "ホーム画面ウィジェット",
-    "feature5": "おおきめ文字サイズ",
-    "purchase": "登録する — {{price}}/月",
-    "restore": "購入を復元",
-    "terms": "登録すると、利用規約・プライバシーポリシーに同意したことになります。サブスクリプションは自動更新され、更新日の24時間前までにキャンセルしない限り自動的に課金されます。"
   },
   "timing": {
     "before_meal": "食前",

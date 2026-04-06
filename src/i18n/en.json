@@ -50,7 +50,7 @@
     "emptyTitle": "No medications yet",
     "emptyBody": "Tap the + button below\nto add your first medication",
     "deleteConfirm": "Delete \"{{name}}\"?\nThis will also remove all dose records.",
-    "freeCount": "{{count}} / {{limit}} registered (Free plan)"
+    "freeCount": "{{count}} / {{limit}} registered"
   },
   "form": {
     "hint": "Set the name, dosage, and timing for your medication. You can edit these later.",
@@ -80,30 +80,14 @@
     "notifications": "Notifications",
     "notificationsDesc": "Remind me at medication times",
     "uiSize": "Text Size",
-    "uiSizeDesc": "Large text is available with Pro",
+    "uiSizeDesc": "Choose a text size that works best for you",
     "uiStandard": "Standard",
     "uiLarge": "Large",
-    "subscribe": "Upgrade to Pro",
-    "subscribeDesc": "Unlimited meds, PDF/CSV export, widget, text size options",
-    "restore": "Restore Purchase",
-    "price": "{{price}}/month",
     "about": "About This App",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
     "version": "Version",
     "madeWith": "Made with care for your health"
-  },
-  "paywall": {
-    "title": "Unlock Pro",
-    "description": "Get the most out of your medication tracking with these extra features.",
-    "feature1": "Unlimited medications",
-    "feature2": "PDF health reports",
-    "feature3": "CSV data export",
-    "feature4": "Home screen widget",
-    "feature5": "Large text option",
-    "purchase": "Subscribe — {{price}}/mo",
-    "restore": "Restore Purchase",
-    "terms": "By subscribing, you agree to our Terms of Use and Privacy Policy. Subscriptions auto-renew and will be charged unless cancelled at least 24 hours before the renewal date."
   },
   "timing": {
     "before_meal": "Before meal",
