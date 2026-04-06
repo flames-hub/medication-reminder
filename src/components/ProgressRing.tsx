@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Svg, { Circle, Text as SvgText } from 'react-native-svg';
+import { View, Text, StyleSheet } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '../hooks/useTheme';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +10,7 @@ interface Props {
   inverted?: boolean; // カラー背景上に乗せる場合は true（白系の色を使う）
   size?: number;      // 指定時はこのサイズを使用（未指定は uiSize に従う）
   strokeWidth?: number;
+  compact?: boolean;  // true の場合はステータステキストを非表示
 }
 
 function getStatusMessage(done: number, total: number, t: (key: string) => string): string {
@@ -20,7 +21,7 @@ function getStatusMessage(done: number, total: number, t: (key: string) => strin
   return t('today.ringAlmost');
 }
 
-export function ProgressRing({ done, total, inverted = false, size: sizeProp, strokeWidth: strokeWidthProp }: Props) {
+export function ProgressRing({ done, total, inverted = false, size: sizeProp, strokeWidth: strokeWidthProp, compact = false }: Props) {
   const { colors, fontSize, uiSize } = useTheme();
   const { t } = useTranslation();
 
@@ -38,11 +39,12 @@ export function ProgressRing({ done, total, inverted = false, size: sizeProp, st
   const textColor = inverted ? '#FFFFFF' : colors.text;
   const messageColor = inverted ? 'rgba(255,255,255,0.8)' : (percent === 1 ? colors.success : colors.primary);
 
-  const statusMessage = getStatusMessage(done, total, t);
+  const statusMessage = compact ? '' : getStatusMessage(done, total, t);
+  const textFontSize = compact ? Math.round(size * 0.26) : fontSize.lg;
 
   return (
-    <View style={styles.container}>
-      <Svg width={size} height={size}>
+    <View style={[styles.container, { width: size, height: size }]}>
+      <Svg width={size} height={size} style={StyleSheet.absoluteFill}>
         <Circle
           cx={size / 2} cy={size / 2} r={radius}
           stroke={trackColor} strokeWidth={strokeWidth} fill="none"
@@ -56,36 +58,26 @@ export function ProgressRing({ done, total, inverted = false, size: sizeProp, st
           strokeLinecap="round" rotation="-90"
           origin={`${size / 2}, ${size / 2}`}
         />
-        <SvgText
-          x={size / 2}
-          y={statusMessage ? size / 2 - 8 : size / 2}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={fontSize.lg}
-          fontWeight="700"
-          fill={textColor}
-        >
-          {done}/{total}
-        </SvgText>
-        {statusMessage ? (
-          <SvgText
-            x={size / 2}
-            y={size / 2 + 12}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fontSize={10}
-            fontWeight="600"
-            fill={messageColor}
-            letterSpacing={0.3}
-          >
-            {statusMessage}
-          </SvgText>
-        ) : null}
       </Svg>
+      <View style={styles.textOverlay}>
+        <Text style={{ color: textColor, fontSize: textFontSize, fontWeight: '700', textAlign: 'center' }}>
+          {done}/{total}
+        </Text>
+        {statusMessage ? (
+          <Text style={{ color: messageColor, fontSize: 10, fontWeight: '600', textAlign: 'center', letterSpacing: 0.3, marginTop: 2 }}>
+            {statusMessage}
+          </Text>
+        ) : null}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center' },
+  textOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

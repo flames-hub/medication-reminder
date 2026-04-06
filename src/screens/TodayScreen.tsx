@@ -24,6 +24,20 @@ function getGreeting(t: (key: string) => string): string {
   return t('today.greetEvening');
 }
 
+function getTimePeriodLabel(time: string, lang: string): string {
+  const h = parseInt(time.split(':')[0], 10);
+  if (lang.startsWith('ja')) {
+    if (h < 10) return `朝 · ${time}`;
+    if (h < 14) return `昼 · ${time}`;
+    if (h < 18) return `夕 · ${time}`;
+    return `夜 · ${time}`;
+  }
+  if (h < 10) return `Morning · ${time}`;
+  if (h < 14) return `Noon · ${time}`;
+  if (h < 18) return `Afternoon · ${time}`;
+  return `Evening · ${time}`;
+}
+
 type ScheduleItem = ReturnType<typeof useMedicationStore.getState>['todaySchedule'][0];
 type TimeGroup = { time: string; items: ScheduleItem[] };
 
@@ -87,7 +101,7 @@ export function TodayScreen() {
                 {formatDate(i18n.language)}
               </Text>
             </View>
-            <ProgressRing done={stats.done} total={stats.total} size={46} strokeWidth={3} inverted={themeId !== 'dark'} />
+            <ProgressRing done={stats.done} total={stats.total} size={56} strokeWidth={3} inverted={themeId !== 'dark'} compact />
           </View>
           <View style={styles.tagRow}>
             {allDone ? (
@@ -134,7 +148,7 @@ export function TodayScreen() {
           if (item.type === 'group-header') {
             return (
               <Text style={[styles.sectionHeader, { color: colors.textSecondary, fontSize: fontSize.xs }]}>
-                {item.time}
+                {getTimePeriodLabel(item.time, i18n.language)}
               </Text>
             );
           }

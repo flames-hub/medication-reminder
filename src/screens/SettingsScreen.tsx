@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Switch, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '../store/settingsStore';
-import { PaywallModal } from '../components/PaywallModal';
 import { Spacing, Radius, ThemeMeta, ThemePalettes } from '../constants/theme';
 import { useTheme } from '../hooks/useTheme';
 import { ThemeId } from '../types';
@@ -16,8 +15,7 @@ const THEME_IDS: ThemeId[] = ['sakura', 'mint', 'honey', 'dark'];
 export function SettingsScreen() {
   const { t, i18n } = useTranslation();
   const { colors, fontSize, themeId } = useTheme();
-  const { isPro, uiSize, notificationsEnabled, setUISize, setIsPro, setNotificationsEnabled, setThemeId } = useSettingsStore();
-  const [showPaywall, setShowPaywall] = useState(false);
+  const { uiSize, notificationsEnabled, setUISize, setNotificationsEnabled, setThemeId } = useSettingsStore();
 
   const lang = i18n.language?.startsWith('ja') ? 'ja' : 'en';
 
@@ -85,49 +83,16 @@ export function SettingsScreen() {
           </Text>
         </TouchableOpacity>
         <View style={{ width: StyleSheet.hairlineWidth, backgroundColor: colors.border }} />
-        {isPro ? (
-          <TouchableOpacity
-            style={[styles.segmentBtn, { backgroundColor: uiSize === 'large' ? colors.primary : 'transparent' }]}
-            onPress={() => setUISize('large')}
-            accessibilityRole="radio" accessibilityState={{ selected: uiSize === 'large' }}
-          >
-            <Text style={{ color: uiSize === 'large' ? '#fff' : colors.text, fontSize: fontSize.md, fontWeight: '500' }}>
-              {t('settings.uiLarge')}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.segmentBtn, { backgroundColor: 'transparent' }]}
-            onPress={() => setShowPaywall(true)}
-          >
-            <Ionicons name="lock-closed" size={12} color={colors.muted} style={{ marginRight: 4 }} />
-            <Text style={{ color: colors.muted, fontSize: fontSize.md }}>{t('settings.uiLarge')}</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[styles.segmentBtn, { backgroundColor: uiSize === 'large' ? colors.primary : 'transparent' }]}
+          onPress={() => setUISize('large')}
+          accessibilityRole="radio" accessibilityState={{ selected: uiSize === 'large' }}
+        >
+          <Text style={{ color: uiSize === 'large' ? '#fff' : colors.text, fontSize: fontSize.md, fontWeight: '500' }}>
+            {t('settings.uiLarge')}
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      {/* ── Pro ── */}
-      {!isPro && (
-        <>
-          <SectionTitle text="PRO" />
-          <TouchableOpacity
-            style={[styles.proCard, { backgroundColor: colors.primary }]}
-            onPress={() => setShowPaywall(true)}
-            activeOpacity={0.8}
-          >
-            <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: '700' }}>{t('settings.subscribe')}</Text>
-            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: fontSize.sm, marginTop: 4 }}>
-              {t('settings.subscribeDesc')}
-            </Text>
-          </TouchableOpacity>
-        </>
-      )}
-      {isPro && (
-        <View style={[styles.row, { backgroundColor: colors.surface, borderBottomColor: colors.border, marginTop: Spacing.md }]}>
-          <Ionicons name="checkmark-circle" size={20} color={colors.success} />
-          <Text style={{ color: colors.success, fontSize: fontSize.md, fontWeight: '600', marginLeft: Spacing.sm }}>Pro</Text>
-        </View>
-      )}
 
       {/* ── About ── */}
       <SectionTitle text={t('settings.about')} />
@@ -150,12 +115,6 @@ export function SettingsScreen() {
         {t('settings.madeWith')}
       </Text>
 
-      <PaywallModal
-        visible={showPaywall}
-        onClose={() => setShowPaywall(false)}
-        onSubscribe={() => { setIsPro(true); setShowPaywall(false); }}
-        onRestore={() => setShowPaywall(false)}
-      />
     </ScrollView>
   );
 }
@@ -194,11 +153,6 @@ const styles = StyleSheet.create({
   segmentBtn: {
     flex: 1, paddingVertical: 12, alignItems: 'center',
     flexDirection: 'row', justifyContent: 'center',
-  },
-  proCard: {
-    padding: Spacing.lg,
-    marginHorizontal: Spacing.md,
-    borderRadius: Radius.lg,
   },
   aboutRow: {
     flexDirection: 'row',

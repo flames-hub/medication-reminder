@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, FlatList, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
-import { useSettingsStore } from '../store/settingsStore';
-import { PaywallModal } from '../components/PaywallModal';
 import { Spacing, Shadow } from '../constants/theme';
 import { useTheme } from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AppNavigator';
-
-const FREE_LIMIT = 3;
 
 const INITIAL_BG_KEYS = ['primaryMuted', 'successMuted', 'warningMuted', 'fill'] as const;
 const INITIAL_COLOR_KEYS = ['primary', 'success', 'warning', 'textSecondary'] as const;
@@ -19,20 +15,14 @@ const INITIAL_COLOR_KEYS = ['primary', 'success', 'warning', 'textSecondary'] as
 export function MedicationListScreen() {
   const { t } = useTranslation();
   const { colors, fontSize } = useTheme();
-  const { isPro } = useSettingsStore();
   const { medications, loadMedications, removeMedication } = useMedicationStore();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
     loadMedications();
   }, []);
 
   function handleAdd() {
-    if (!isPro && medications.length >= FREE_LIMIT) {
-      setShowPaywall(true);
-      return;
-    }
     navigation.navigate('AddMedication', {});
   }
 
@@ -49,11 +39,6 @@ export function MedicationListScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {!isPro && medications.length > 0 && (
-        <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, paddingHorizontal: Spacing.md, paddingTop: Spacing.md }}>
-          {t('medList.freeCount', { count: medications.length, limit: FREE_LIMIT })}
-        </Text>
-      )}
       <FlatList
         data={medications}
         keyExtractor={(item) => item.id}
@@ -110,12 +95,6 @@ export function MedicationListScreen() {
       >
         <Ionicons name="add" size={28} color="#fff" />
       </TouchableOpacity>
-      <PaywallModal
-        visible={showPaywall}
-        onClose={() => setShowPaywall(false)}
-        onSubscribe={() => setShowPaywall(false)}
-        onRestore={() => setShowPaywall(false)}
-      />
     </View>
   );
 }
