@@ -3,100 +3,270 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>プライバシーポリシー — のみごろ</title>
+  <title>プライバシーポリシー / Privacy Policy — のみごろ</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; color: #1c1c1e; background: #f2f2f7; }
-    .container { max-width: 680px; margin: 0 auto; padding: 48px 24px; }
-    .app-name { color: #E8788A; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .updated { font-size: 13px; color: #8e8e93; margin-bottom: 40px; }
-    .card { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 16px; }
-    h2 { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
-    p { font-size: 15px; line-height: 1.7; color: #3a3a3c; margin-bottom: 10px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
+      background: #F5F0EA;
+      color: #1C1410;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+
+    /* Lang toggle */
+    .lang-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .lang-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1.5px solid #B8522E;
+      background: transparent;
+      color: #B8522E;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-btn.active {
+      background: #B8522E;
+      color: #fff;
+    }
+
+    /* Header */
+    .app-badge {
+      display: inline-block;
+      background: #B8522E;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #1C1410;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .updated {
+      font-size: 13px;
+      color: #7A6A5E;
+      margin-bottom: 36px;
+    }
+
+    /* Highlight banner */
+    .banner {
+      background: #fff;
+      border: 1.5px solid #E0D6CC;
+      border-left: 4px solid #B8522E;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1C1410;
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border: 1.5px solid #E0D6CC;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #B8522E;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    p {
+      font-size: 15px;
+      color: #3A2E28;
+      margin-bottom: 10px;
+    }
     p:last-child { margin-bottom: 0; }
-    ul { padding-left: 20px; }
-    ul li { font-size: 15px; line-height: 1.7; color: #3a3a3c; margin-bottom: 6px; }
-    .highlight { background: #fff4f5; border-left: 3px solid #E8788A; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 12px; }
-    .highlight p { color: #1c1c1e; font-weight: 500; margin: 0; }
-    footer { text-align: center; font-size: 13px; color: #8e8e93; margin-top: 40px; }
-    a { color: #E8788A; text-decoration: none; }
+    p.en { color: #7A6A5E; font-size: 14px; margin-top: 6px; }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 10px;
+    }
+    ul li {
+      font-size: 15px;
+      color: #3A2E28;
+      margin-bottom: 6px;
+    }
+    ul li.en {
+      color: #7A6A5E;
+      font-size: 14px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #E0D6CC;
+      margin: 12px 0;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #7A6A5E;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1.5px solid #E0D6CC;
+    }
+    footer a {
+      color: #B8522E;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* Language visibility */
+    .ja, .en-block { display: block; }
+    body.en-mode .ja { display: none; }
+    body.en-mode .en-block { display: block; }
+    body.ja-mode .en-block { display: none; }
+    .en-block { display: none; }
   </style>
 </head>
-<body>
+<body class="ja-mode">
   <div class="container">
-    <div class="app-name">のみごろ</div>
-    <h1>プライバシーポリシー</h1>
-    <p class="updated">最終更新日：2026年4月6日</p>
 
-    <div class="card">
-      <div class="highlight">
-        <p>📱 のみごろはすべてのデータをお使いのデバイス内にのみ保存します。個人情報を外部サーバーへ送信することは一切ありません。</p>
-      </div>
-      <p>本プライバシーポリシーは、TAMA（以下「当社」）が提供するiOSアプリ「のみごろ」（以下「本アプリ」）における個人情報の取り扱いについて定めるものです。</p>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('ja')">日本語</button>
+      <button class="lang-btn" onclick="setLang('en')">English</button>
     </div>
 
+    <div class="app-badge">のみごろ</div>
+
+    <h1 class="ja">プライバシーポリシー</h1>
+    <h1 class="en-block">Privacy Policy</h1>
+    <p class="updated ja">最終更新日：2026年4月6日</p>
+    <p class="updated en-block">Last updated: April 6, 2026</p>
+
+    <div class="banner ja">
+      📱 のみごろはすべてのデータをお使いのデバイス内にのみ保存します。個人情報を外部サーバーへ送信することは一切ありません。
+    </div>
+    <div class="banner en-block">
+      📱 のみごろ stores all data on your device only. We never transmit personal information to external servers.
+    </div>
+
+    <!-- Section 1 -->
     <div class="card">
-      <h2>1. 収集する情報</h2>
-      <p>本アプリが扱うデータは以下のとおりです。</p>
+      <h2>1. <span class="ja">収集する情報</span><span class="en-block">Data We Handle</span></h2>
+      <p class="ja">本アプリが扱うデータは以下のとおりです。これらはすべてお使いのデバイス内に保存されます。</p>
+      <p class="en-block">The following data is handled by this app. All of it is stored locally on your device.</p>
       <ul>
-        <li>薬の名称・用量・服用スケジュール</li>
-        <li>服薬記録（服用・スキップ・メモ）</li>
-        <li>薬の写真（任意）</li>
-        <li>アプリの表示設定（テーマ・文字サイズなど）</li>
+        <li class="ja">薬の名称・用量・服用スケジュール</li>
+        <li class="en-block">Medication names, dosages, and schedules</li>
+        <li class="ja">服薬記録（服用・スキップ・メモ）</li>
+        <li class="en-block">Medication logs (taken, skipped, notes)</li>
+        <li class="ja">薬の写真（任意）</li>
+        <li class="en-block">Medication photos (optional)</li>
+        <li class="ja">アプリの表示設定（テーマ・文字サイズなど）</li>
+        <li class="en-block">App display settings (theme, font size, etc.)</li>
       </ul>
-      <p style="margin-top:12px;">これらはすべてお使いのデバイス内に保存されます。</p>
     </div>
 
+    <!-- Section 2 -->
     <div class="card">
-      <h2>2. 情報の利用目的</h2>
+      <h2>2. <span class="ja">情報の利用目的</span><span class="en-block">Purpose of Use</span></h2>
       <ul>
-        <li>服薬スケジュールの管理と通知送信</li>
-        <li>服薬履歴の記録と表示</li>
-        <li>アプリ設定の保存</li>
+        <li class="ja">服薬スケジュールの管理と通知送信</li>
+        <li class="en-block">Managing medication schedules and sending reminders</li>
+        <li class="ja">服薬履歴の記録と表示</li>
+        <li class="en-block">Recording and displaying medication history</li>
+        <li class="ja">アプリ設定の保存</li>
+        <li class="en-block">Saving app preferences</li>
       </ul>
     </div>
 
+    <!-- Section 3 -->
     <div class="card">
-      <h2>3. 第三者への提供</h2>
-      <p>当社はお客様の情報を第三者に販売・貸与・開示することはありません。本アプリは外部サーバーへのデータ送信を行わないため、第三者がデータにアクセスする手段はありません。</p>
+      <h2>3. <span class="ja">第三者への提供</span><span class="en-block">Third-Party Sharing</span></h2>
+      <p class="ja">当社はお客様の情報を第三者に販売・貸与・開示することはありません。本アプリは外部サーバーへのデータ送信を行わないため、第三者がデータにアクセスする手段はありません。</p>
+      <p class="en-block">We do not sell, rent, or disclose your information to any third party. Since this app does not transmit data to external servers, there is no means for third parties to access your data.</p>
     </div>
 
+    <!-- Section 4 -->
     <div class="card">
-      <h2>4. プッシュ通知</h2>
-      <p>服薬リマインダーとしてプッシュ通知を送信します。通知の許可はiOSの設定からいつでも変更できます。通知に関するデータは端末内でのみ処理されます。</p>
+      <h2>4. <span class="ja">プッシュ通知</span><span class="en-block">Push Notifications</span></h2>
+      <p class="ja">服薬リマインダーとしてプッシュ通知を送信します。通知の許可はiOSの設定からいつでも変更できます。通知に関するデータは端末内でのみ処理されます。</p>
+      <p class="en-block">We send push notifications as medication reminders. You can change notification permissions at any time in iOS Settings. Notification data is processed only on your device.</p>
     </div>
 
+    <!-- Section 5 -->
     <div class="card">
-      <h2>5. カメラ・フォトライブラリ</h2>
-      <p>薬の写真を登録する場合、カメラまたはフォトライブラリへのアクセス許可が必要です。取得した写真データは端末内にのみ保存され、外部に送信されることはありません。</p>
+      <h2>5. <span class="ja">カメラ・フォトライブラリ</span><span class="en-block">Camera & Photo Library</span></h2>
+      <p class="ja">薬の写真を登録する場合、カメラまたはフォトライブラリへのアクセス許可が必要です。取得した写真データは端末内にのみ保存され、外部に送信されることはありません。</p>
+      <p class="en-block">To register a medication photo, permission to access your camera or photo library is required. Photo data is stored only on your device and is never transmitted externally.</p>
     </div>
 
+    <!-- Section 6 -->
     <div class="card">
-      <h2>6. データの削除</h2>
-      <p>本アプリをアンインストールすることで、すべてのデータがデバイスから削除されます。当社のサーバーにはデータが存在しないため、当社側での削除操作は不要です。</p>
+      <h2>6. <span class="ja">データの削除</span><span class="en-block">Data Deletion</span></h2>
+      <p class="ja">本アプリをアンインストールすることで、すべてのデータがデバイスから削除されます。当社のサーバーにはデータが存在しないため、当社側での削除操作は不要です。</p>
+      <p class="en-block">Uninstalling the app removes all data from your device. Since no data exists on our servers, no deletion request to us is necessary.</p>
     </div>
 
+    <!-- Section 7 -->
     <div class="card">
-      <h2>7. 子どものプライバシー</h2>
-      <p>本アプリは13歳未満の方を対象としていません。</p>
+      <h2>7. <span class="ja">子どものプライバシー</span><span class="en-block">Children's Privacy</span></h2>
+      <p class="ja">本アプリは13歳未満の方を対象としていません。</p>
+      <p class="en-block">This app is not intended for children under 13 years of age.</p>
     </div>
 
+    <!-- Section 8 -->
     <div class="card">
-      <h2>8. ポリシーの変更</h2>
-      <p>本ポリシーを変更する場合、このページを更新します。重要な変更がある場合はアプリ内でお知らせします。</p>
+      <h2>8. <span class="ja">ポリシーの変更</span><span class="en-block">Changes to This Policy</span></h2>
+      <p class="ja">本ポリシーを変更する場合、このページを更新します。重要な変更がある場合はアプリ内でお知らせします。</p>
+      <p class="en-block">If we update this policy, we will revise this page. For significant changes, we will notify you within the app.</p>
     </div>
 
+    <!-- Section 9 -->
     <div class="card">
-      <h2>9. お問い合わせ</h2>
-      <p>本ポリシーに関するご質問はApp Storeのレビューよりお寄せください。</p>
-      <p>開発者：TAMA</p>
+      <h2>9. <span class="ja">お問い合わせ</span><span class="en-block">Contact</span></h2>
+      <p class="ja">本ポリシーに関するご質問はApp Storeのレビューよりお寄せください。</p>
+      <p class="en-block">For questions about this policy, please contact us via App Store reviews.</p>
+      <hr class="section-divider">
+      <p class="ja" style="font-size:13px;color:#7A6A5E;">開発者：TAMA</p>
+      <p class="en-block" style="font-size:13px;color:#7A6A5E;">Developer: TAMA</p>
     </div>
 
     <footer>
       <p>© 2026 TAMA. All rights reserved.</p>
-      <p style="margin-top:8px;"><a href="terms.html">利用規約</a></p>
+      <p style="margin-top:10px;"><a href="terms.html">利用規約 / Terms of Service</a></p>
     </footer>
+
   </div>
+
+  <script>
+    function setLang(lang) {
+      document.body.className = lang + '-mode';
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim() === (lang === 'ja' ? '日本語' : 'English'));
+      });
+      document.documentElement.lang = lang;
+    }
+  </script>
 </body>
 </html>
