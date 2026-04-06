@@ -1,3 +1,5 @@
+export type MealTiming = 'before_meal' | 'after_meal' | 'between_meals' | 'before_bed' | 'anytime';
+
 export interface Medication {
   id: string;
   name: string;
@@ -8,6 +10,7 @@ export interface Medication {
   intervalDays?: number;
   weekdays?: number[];    // 0=Sun ... 6=Sat
   times: string[];        // ['08:00', '12:00', '20:00']
+  mealTiming: MealTiming;
   startDate: string;
   endDate?: string;
   note?: string;
@@ -20,8 +23,9 @@ export interface DoseLog {
   scheduledAt: string;    // ISO datetime
   takenAt?: string;
   skipped: boolean;
+  memo?: string;
 }
 
 export type DayStatus = 'all_taken' | 'partial' | 'all_missed' | 'none';
 export type UISize = 'standard' | 'large';
-export type ThemeId = 'sakura' | 'mint' | 'honey';
+export type ThemeId = 'sakura' | 'mint' | 'honey' | 'dark';

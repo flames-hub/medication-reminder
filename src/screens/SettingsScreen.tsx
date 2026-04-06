@@ -4,15 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '../store/settingsStore';
 import { PaywallModal } from '../components/PaywallModal';
-import { Card } from '../components/GlassCard';
-import { Spacing, Radius, ThemeMeta } from '../constants/theme';
+import { Spacing, Radius, ThemeMeta, ThemePalettes } from '../constants/theme';
 import { useTheme } from '../hooks/useTheme';
 import { ThemeId } from '../types';
 
 const APP_VERSION = '1.0.0';
 const PRIVACY_URL = 'https://flames-hub.github.io/medication-reminder/privacy.html';
 const TERMS_URL = 'https://flames-hub.github.io/medication-reminder/terms.html';
-const THEME_IDS: ThemeId[] = ['sakura', 'mint', 'honey'];
+const THEME_IDS: ThemeId[] = ['sakura', 'mint', 'honey', 'dark'];
 
 export function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -23,7 +22,7 @@ export function SettingsScreen() {
   const lang = i18n.language?.startsWith('ja') ? 'ja' : 'en';
 
   function SectionTitle({ text }: { text: string }) {
-    return <Text style={[styles.section, { color: colors.textSecondary, fontSize: fontSize.sm }]}>{text.toUpperCase()}</Text>;
+    return <Text style={[styles.section, { color: colors.textSecondary, fontSize: fontSize.xs }]}>{text.toUpperCase()}</Text>;
   }
 
   return (
@@ -31,30 +30,36 @@ export function SettingsScreen() {
 
       {/* ── テーマ ── */}
       <SectionTitle text={t('settings.theme')} />
-      <Card style={[styles.themeRow]}>
+      <View style={[styles.swatchRow, { backgroundColor: colors.surface }]}>
         {THEME_IDS.map((id) => {
-          const meta = ThemeMeta[id];
           const selected = id === themeId;
+          const swatchColor = id === 'dark' ? '#2a2a2a' : ThemePalettes[id].primary;
           return (
             <TouchableOpacity
               key={id}
               onPress={() => setThemeId(id)}
-              style={[styles.themeBtn, selected && { backgroundColor: colors.primaryMuted, borderColor: colors.primary, borderWidth: 2 }]}
+              style={styles.swatchWrap}
               accessibilityRole="radio"
               accessibilityState={{ selected }}
             >
-              <Text style={{ fontSize: 24 }}>{meta.emoji}</Text>
-              <Text style={{ color: selected ? colors.primary : colors.text, fontSize: fontSize.sm, fontWeight: selected ? '600' : '400', marginTop: 4 }}>
-                {lang === 'ja' ? meta.labelJa : meta.labelEn}
+              <View style={[
+                styles.swatch,
+                { backgroundColor: swatchColor },
+                selected && { borderWidth: 2.5, borderColor: colors.primary },
+              ]}>
+                {selected && <Text style={{ color: '#fff', fontSize: 16 }}>✓</Text>}
+              </View>
+              <Text style={{ color: selected ? colors.primary : colors.textSecondary, fontSize: fontSize.xs, fontWeight: selected ? '700' : '400', marginTop: 4 }}>
+                {lang === 'ja' ? ThemeMeta[id].labelJa : ThemeMeta[id].labelEn}
               </Text>
             </TouchableOpacity>
           );
         })}
-      </Card>
+      </View>
 
       {/* ── 通知 ── */}
       <SectionTitle text={t('settings.notifications')} />
-      <Card style={styles.row}>
+      <View style={[styles.row, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         <Text style={{ color: colors.text, fontSize: fontSize.md, flex: 1 }}>{t('settings.notificationsDesc')}</Text>
         <Switch
           value={notificationsEnabled}
@@ -62,14 +67,14 @@ export function SettingsScreen() {
           trackColor={{ true: colors.primary, false: colors.fill }}
           thumbColor="#fff"
         />
-      </Card>
+      </View>
 
       {/* ── 文字サイズ ── */}
       <SectionTitle text={t('settings.uiSize')} />
       <Text style={{ color: colors.muted, fontSize: fontSize.sm, paddingHorizontal: Spacing.md, marginBottom: Spacing.xs }}>
         {t('settings.uiSizeDesc')}
       </Text>
-      <Card style={[styles.row, { gap: 0, padding: 0, overflow: 'hidden' }]}>
+      <View style={[styles.row, { backgroundColor: colors.surface, borderBottomColor: colors.border, gap: 0, padding: 0, overflow: 'hidden' }]}>
         <TouchableOpacity
           style={[styles.segmentBtn, { backgroundColor: uiSize === 'standard' ? colors.primary : 'transparent' }]}
           onPress={() => setUISize('standard')}
@@ -99,47 +104,47 @@ export function SettingsScreen() {
             <Text style={{ color: colors.muted, fontSize: fontSize.md }}>{t('settings.uiLarge')}</Text>
           </TouchableOpacity>
         )}
-      </Card>
+      </View>
 
       {/* ── Pro ── */}
       {!isPro && (
         <>
           <SectionTitle text="PRO" />
-          <TouchableOpacity onPress={() => setShowPaywall(true)} activeOpacity={0.8}>
-            <Card style={[styles.proCard, { backgroundColor: colors.primary }]}>
-              <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: '700' }}>{t('settings.subscribe')}</Text>
-              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: fontSize.sm, marginTop: 4 }}>
-                {t('settings.subscribeDesc')}
-              </Text>
-            </Card>
+          <TouchableOpacity
+            style={[styles.proCard, { backgroundColor: colors.primary }]}
+            onPress={() => setShowPaywall(true)}
+            activeOpacity={0.8}
+          >
+            <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: '700' }}>{t('settings.subscribe')}</Text>
+            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: fontSize.sm, marginTop: 4 }}>
+              {t('settings.subscribeDesc')}
+            </Text>
           </TouchableOpacity>
         </>
       )}
       {isPro && (
-        <Card style={[styles.row, { marginTop: Spacing.md, marginHorizontal: Spacing.md }]}>
+        <View style={[styles.row, { backgroundColor: colors.surface, borderBottomColor: colors.border, marginTop: Spacing.md }]}>
           <Ionicons name="checkmark-circle" size={20} color={colors.success} />
           <Text style={{ color: colors.success, fontSize: fontSize.md, fontWeight: '600', marginLeft: Spacing.sm }}>Pro</Text>
-        </Card>
+        </View>
       )}
 
       {/* ── About ── */}
       <SectionTitle text={t('settings.about')} />
-      <Card style={styles.aboutCard}>
-        <TouchableOpacity style={styles.aboutRow} onPress={() => Linking.openURL(PRIVACY_URL)} accessibilityRole="link">
+      <View style={{ backgroundColor: colors.surface }}>
+        <TouchableOpacity style={[styles.aboutRow, { borderBottomColor: colors.border }]} onPress={() => Linking.openURL(PRIVACY_URL)} accessibilityRole="link">
           <Text style={{ color: colors.text, fontSize: fontSize.md, flex: 1 }}>{t('settings.privacy')}</Text>
           <Ionicons name="chevron-forward" size={18} color={colors.muted} />
         </TouchableOpacity>
-        <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.border }} />
-        <TouchableOpacity style={styles.aboutRow} onPress={() => Linking.openURL(TERMS_URL)} accessibilityRole="link">
+        <TouchableOpacity style={[styles.aboutRow, { borderBottomColor: colors.border }]} onPress={() => Linking.openURL(TERMS_URL)} accessibilityRole="link">
           <Text style={{ color: colors.text, fontSize: fontSize.md, flex: 1 }}>{t('settings.terms')}</Text>
           <Ionicons name="chevron-forward" size={18} color={colors.muted} />
         </TouchableOpacity>
-        <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.border }} />
-        <View style={styles.aboutRow}>
+        <View style={[styles.aboutRow, { borderBottomWidth: 0 }]}>
           <Text style={{ color: colors.text, fontSize: fontSize.md, flex: 1 }}>{t('settings.version')}</Text>
           <Text style={{ color: colors.muted, fontSize: fontSize.md }}>{APP_VERSION}</Text>
         </View>
-      </Card>
+      </View>
 
       <Text style={{ color: colors.muted, fontSize: fontSize.sm, textAlign: 'center', paddingVertical: Spacing.lg }}>
         {t('settings.madeWith')}
@@ -158,24 +163,48 @@ export function SettingsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { paddingBottom: Spacing.xl },
-  section: { paddingHorizontal: Spacing.md, paddingTop: Spacing.lg, paddingBottom: Spacing.xs, fontWeight: '500', letterSpacing: 0.5 },
+  section: {
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.lg,
+    paddingBottom: Spacing.xs,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+  },
+  swatchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+  },
+  swatchWrap: { alignItems: 'center' },
+  swatch: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   row: {
-    flexDirection: 'row', alignItems: 'center',
-    padding: Spacing.md, marginHorizontal: Spacing.md,
-  },
-  themeRow: {
-    flexDirection: 'row', justifyContent: 'space-around',
-    padding: Spacing.md, marginHorizontal: Spacing.md,
-  },
-  themeBtn: {
-    alignItems: 'center', paddingVertical: Spacing.sm, paddingHorizontal: Spacing.md,
-    borderRadius: Radius.md, borderWidth: 2, borderColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   segmentBtn: {
     flex: 1, paddingVertical: 12, alignItems: 'center',
     flexDirection: 'row', justifyContent: 'center',
   },
-  proCard: { padding: Spacing.lg, marginHorizontal: Spacing.md },
-  aboutCard: { marginHorizontal: Spacing.md },
-  aboutRow: { flexDirection: 'row', alignItems: 'center', padding: Spacing.md },
+  proCard: {
+    padding: Spacing.lg,
+    marginHorizontal: Spacing.md,
+    borderRadius: Radius.lg,
+  },
+  aboutRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
 });

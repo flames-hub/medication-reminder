@@ -11,7 +11,19 @@
     "skip": "スキップ",
     "empty": "今日のおくすりはないよ",
     "emptyHint": "「おくすり」タブからお薬を登録してね",
-    "instruction": "飲んだら「のむ」をタップしてね"
+    "instruction": "飲んだら「のむ」をタップしてね",
+    "schedule": "きょうのスケジュール",
+    "remaining": "あと{{count}}件",
+    "doneCount": "{{count}}件のんだ",
+    "skippedCount": "{{count}}件スキップ",
+    "nextDose": "次はこれ",
+    "greetMorning": "おはよう",
+    "greetAfternoon": "こんにちは",
+    "greetEvening": "お疲れさま",
+    "ringStart": "さあ始めよう",
+    "ringKeepGoing": "もう少し！",
+    "ringAlmost": "あと少し！",
+    "ringDone": "完璧！"
   },
   "medication": {
     "add": "おくすりを追加",
@@ -29,7 +41,8 @@
     "addTime": "時間を追加",
     "startDate": "開始日",
     "endDate": "終了日（なくてもOK）",
-    "note": "メモ（例: 食後に飲む）",
+    "mealTiming": "タイミング",
+    "note": "メモ",
     "units": { "mg": "mg", "ml": "ml", "tablet": "錠", "capsule": "カプセル", "drop": "滴", "other": "その他" },
     "weekdays": { "0": "日", "1": "月", "2": "火", "3": "水", "4": "木", "5": "金", "6": "土" }
   },
@@ -54,7 +67,12 @@
     "adherence": "がんばり度: {{percent}}%",
     "adherenceHint": "日付をタップするとその日の詳細が見られるよ",
     "tapHint": "カレンダーの日付をタップしてね",
-    "legend": { "allTaken": "全部飲めた", "partial": "ちょっと忘れた", "allMissed": "飲み忘れ", "none": "おくすりなし" }
+    "legend": { "allTaken": "全部飲めた", "partial": "ちょっと忘れた", "allMissed": "飲み忘れ", "none": "おくすりなし" },
+    "detail": "この日のきろく",
+    "noSchedule": "この日はおくすりの予定がなかったよ",
+    "memo": "メモ",
+    "memoPlaceholder": "体調や気づいたことなど",
+    "saved": "保存したよ"
   },
   "settings": {
     "title": "せってい",
@@ -86,6 +104,13 @@
     "purchase": "登録する — {{price}}/月",
     "restore": "購入を復元",
     "terms": "登録すると、利用規約・プライバシーポリシーに同意したことになります。サブスクリプションは自動更新され、更新日の24時間前までにキャンセルしない限り自動的に課金されます。"
+  },
+  "timing": {
+    "before_meal": "食前",
+    "after_meal": "食後",
+    "between_meals": "食間",
+    "before_bed": "寝る前",
+    "anytime": "いつでも"
   },
   "common": { "cancel": "やめる", "save": "保存", "delete": "削除", "edit": "編集", "done": "OK" }
 }

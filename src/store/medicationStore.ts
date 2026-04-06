@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 import { Medication, DoseLog, DayStatus } from '../types';
 import {
   getAllMedications,
@@ -11,13 +11,14 @@ import { getDoseLogsForDate, getDoseLogsForMonth, upsertDoseLog } from '../db/do
 import { generateScheduleForDate } from '../utils/scheduler';
 import { getTodayString, getYearMonthString } from '../utils/dateUtils';
 
-interface ScheduledDose {
+export interface ScheduledDose {
   logId: string;
   medication: Medication;
   scheduledAt: string;
   time: string;
   takenAt?: string;
   skipped: boolean;
+  memo?: string;
 }
 
 interface TodayStats {
@@ -41,6 +42,8 @@ interface MedicationState {
   getTodayStats: () => TodayStats;
   getDayStatus: (dateStr: string, logs: DoseLog[]) => DayStatus;
   getMonthlyAdherence: (yearMonth: string) => Promise<{ percent: number; dayStatuses: Record<string, DayStatus> }>;
+  getDayDetail: (dateStr: string) => Promise<ScheduledDose[]>;
+  updateDoseLog: (logId: string, updates: { takenAt?: string | null; skipped?: boolean; memo?: string }) => Promise<void>;
 }
 
 export const useMedicationStore = create<MedicationState>((set, get) => ({
@@ -57,7 +60,7 @@ export const useMedicationStore = create<MedicationState>((set, get) => ({
   addMedication: async (data) => {
     const med: Medication = {
       ...data,
-      id: uuidv4(),
+      id: Crypto.randomUUID(),
       createdAt: new Date().toISOString(),
     };
     await insertMedication(med);
@@ -89,7 +92,7 @@ export const useMedicationStore = create<MedicationState>((set, get) => ({
         let log = logMap.get(key);
         if (!log) {
           log = {
-            id: uuidv4(),
+            id: Crypto.randomUUID(),
             medicationId: slot.medicationId,
             scheduledAt: slot.scheduledAt,
             skipped: false,
@@ -205,5 +208,65 @@ export const useMedicationStore = create<MedicationState>((set, get) => ({
 
     const percent = totalScheduled === 0 ? 100 : Math.round((totalTaken / totalScheduled) * 100);
     return { percent, dayStatuses };
+  },
+
+  getDayDetail: async (dateStr) => {
+    const { medications } = get();
+    const schedule = generateScheduleForDate(medications, dateStr);
+    const existingLogs = await getDoseLogsForDate(dateStr);
+    const logMap = new Map(existingLogs.map((l) => [l.scheduledAt + l.medicationId, l]));
+
+    return schedule.map((slot) => {
+      const key = slot.scheduledAt + slot.medicationId;
+      const log = logMap.get(key);
+      const med = medications.find((m) => m.id === slot.medicationId)!;
+      return {
+        logId: log?.id ?? '',
+        medication: med,
+        scheduledAt: slot.scheduledAt,
+        time: slot.time,
+        takenAt: log?.takenAt,
+        skipped: log?.skipped ?? false,
+        memo: log?.memo,
+      };
+    });
+  },
+
+  updateDoseLog: async (logId, updates) => {
+    const { todaySchedule } = get();
+    // Find in today schedule or fetch from DB
+    const todayDose = todaySchedule.find((d) => d.logId === logId);
+
+    // Build updated log for DB
+    if (todayDose) {
+      const updatedLog: DoseLog = {
+        id: logId,
+        medicationId: todayDose.medication.id,
+        scheduledAt: todayDose.scheduledAt,
+        takenAt: updates.takenAt === null ? undefined : (updates.takenAt ?? todayDose.takenAt),
+        skipped: updates.skipped ?? todayDose.skipped,
+        memo: updates.memo ?? todayDose.memo,
+      };
+      await upsertDoseLog(updatedLog);
+      set((state) => ({
+        todaySchedule: state.todaySchedule.map((d) =>
+          d.logId === logId ? { ...d, takenAt: updatedLog.takenAt, skipped: updatedLog.skipped, memo: updatedLog.memo } : d
+        ),
+      }));
+    } else {
+      // Historical dose — fetch and update
+      const db = await (await import('../db/database')).getDatabase();
+      const row = await db.getFirstAsync<any>('SELECT * FROM dose_logs WHERE id=?', [logId]);
+      if (!row) return;
+      const updatedLog: DoseLog = {
+        id: logId,
+        medicationId: row.medicationId,
+        scheduledAt: row.scheduledAt,
+        takenAt: updates.takenAt === null ? undefined : (updates.takenAt ?? row.takenAt ?? undefined),
+        skipped: updates.skipped ?? (row.skipped === 1),
+        memo: updates.memo ?? row.memo ?? undefined,
+      };
+      await upsertDoseLog(updatedLog);
+    }
   },
 }));

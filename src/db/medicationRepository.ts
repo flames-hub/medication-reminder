@@ -8,22 +8,23 @@ export async function getAllMedications(): Promise<Medication[]> {
     ...r,
     weekdays: r.weekdays ? JSON.parse(r.weekdays) : undefined,
     times: JSON.parse(r.times),
+    mealTiming: r.mealTiming ?? 'anytime',
   }));
 }
 
 export async function insertMedication(med: Medication): Promise<void> {
   const db = await getDatabase();
   await db.runAsync(
-    'INSERT INTO medications (id, name, dosage, unit, photoUri, frequency, intervalDays, weekdays, times, startDate, endDate, note, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [med.id, med.name, med.dosage, med.unit, med.photoUri ?? null, med.frequency, med.intervalDays ?? null, med.weekdays ? JSON.stringify(med.weekdays) : null, JSON.stringify(med.times), med.startDate, med.endDate ?? null, med.note ?? null, med.createdAt]
+    'INSERT INTO medications (id, name, dosage, unit, photoUri, frequency, intervalDays, weekdays, times, mealTiming, startDate, endDate, note, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [med.id, med.name, med.dosage, med.unit, med.photoUri ?? null, med.frequency, med.intervalDays ?? null, med.weekdays ? JSON.stringify(med.weekdays) : null, JSON.stringify(med.times), med.mealTiming, med.startDate, med.endDate ?? null, med.note ?? null, med.createdAt]
   );
 }
 
 export async function updateMedication(med: Medication): Promise<void> {
   const db = await getDatabase();
   await db.runAsync(
-    'UPDATE medications SET name=?, dosage=?, unit=?, photoUri=?, frequency=?, intervalDays=?, weekdays=?, times=?, startDate=?, endDate=?, note=? WHERE id=?',
-    [med.name, med.dosage, med.unit, med.photoUri ?? null, med.frequency, med.intervalDays ?? null, med.weekdays ? JSON.stringify(med.weekdays) : null, JSON.stringify(med.times), med.startDate, med.endDate ?? null, med.note ?? null, med.id]
+    'UPDATE medications SET name=?, dosage=?, unit=?, photoUri=?, frequency=?, intervalDays=?, weekdays=?, times=?, mealTiming=?, startDate=?, endDate=?, note=? WHERE id=?',
+    [med.name, med.dosage, med.unit, med.photoUri ?? null, med.frequency, med.intervalDays ?? null, med.weekdays ? JSON.stringify(med.weekdays) : null, JSON.stringify(med.times), med.mealTiming, med.startDate, med.endDate ?? null, med.note ?? null, med.id]
   );
 }
 

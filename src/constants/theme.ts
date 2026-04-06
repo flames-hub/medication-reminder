@@ -39,7 +39,7 @@ const sakura: Palette = {
 
 // ── みんと (Mint) ────────────────────────
 const mint: Palette = {
-  primary: '#5CAAAB',
+  primary: '#3D9EA0',
   primaryMuted: '#E8F5F5',
   background: '#F5FAFA',
   surface: '#FFFFFF',
@@ -58,7 +58,7 @@ const mint: Palette = {
 
 // ── はちみつ (Honey) ─────────────────────
 const honey: Palette = {
-  primary: '#D4935D',
+  primary: '#C47A3A',
   primaryMuted: '#FFF3E8',
   background: '#FFFAF5',
   surface: '#FFFFFF',
@@ -75,16 +75,37 @@ const honey: Palette = {
   fill: '#F8F0E8',
 };
 
+// ── ダーク (Dark / DESIGN.md) ───────────────
+const dark: Palette = {
+  primary: '#f59e0b',
+  primaryMuted: 'rgba(245,158,11,0.15)',
+  background: '#0b0a09',
+  surface: '#161513',
+  text: '#f2f0ec',
+  textSecondary: '#a8a29e',
+  border: 'rgba(255,255,255,0.10)',
+  success: '#22c55e',
+  successMuted: 'rgba(34,197,94,0.12)',
+  warning: '#f59e0b',
+  warningMuted: 'rgba(245,158,11,0.15)',
+  error: '#ef4444',
+  errorMuted: 'rgba(239,68,68,0.12)',
+  muted: '#78716c',
+  fill: '#1e1d1b',
+};
+
 export const ThemePalettes: Record<ThemeId, Palette> = {
   sakura,
   mint,
   honey,
+  dark,
 };
 
-export const ThemeMeta: Record<ThemeId, { emoji: string; labelJa: string; labelEn: string }> = {
-  sakura: { emoji: '🌸', labelJa: 'さくら', labelEn: 'Sakura' },
-  mint:   { emoji: '🍃', labelJa: 'みんと', labelEn: 'Mint' },
-  honey:  { emoji: '🍯', labelJa: 'はちみつ', labelEn: 'Honey' },
+export const ThemeMeta: Record<ThemeId, { icon: string; iconColor: string; labelJa: string; labelEn: string }> = {
+  sakura: { icon: 'flower-outline', iconColor: '#E8788A', labelJa: 'さくら', labelEn: 'Sakura' },
+  mint:   { icon: 'leaf-outline',   iconColor: '#5CAAAB', labelJa: 'みんと', labelEn: 'Mint' },
+  honey:  { icon: 'sunny-outline',  iconColor: '#D4935D', labelJa: 'はちみつ', labelEn: 'Honey' },
+  dark:   { icon: 'moon',           iconColor: '#f59e0b', labelJa: 'ダーク',   labelEn: 'Dark' },
 };
 
 /** 現在のテーマのパレットを返す */
@@ -95,11 +116,27 @@ export function getColors(themeId: ThemeId): Palette {
 export const Spacing = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 };
 
 export const FontSize = {
-  standard: { sm: 12, md: 14, lg: 16, xl: 20, xxl: 28 },
-  large: { sm: 16, md: 18, lg: 22, xl: 28, xxl: 36 },
+  standard: { xs: 12, sm: 14, md: 16, lg: 18, xl: 24, xxl: 32 },
+  large: { xs: 16, sm: 18, md: 22, lg: 26, xl: 32, xxl: 40 },
 };
 
 export const Radius = { sm: 8, md: 12, lg: 16, pill: 999 };
+
+export type HeaderColors = {
+  bg: string;
+  text: string;
+  tagBg: string;
+  tagText: string;
+};
+
+export function getHeaderColors(themeId: ThemeId): HeaderColors {
+  if (themeId === 'dark') {
+    const p = ThemePalettes.dark;
+    return { bg: p.surface, text: p.text, tagBg: 'rgba(255,255,255,0.08)', tagText: p.textSecondary };
+  }
+  const p = ThemePalettes[themeId];
+  return { bg: p.primary, text: '#fff', tagBg: 'rgba(255,255,255,0.2)', tagText: '#fff' };
+}
 
 export const Shadow = {
   sm: {

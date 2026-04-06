@@ -16,6 +16,7 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
       intervalDays INTEGER,
       weekdays TEXT,
       times TEXT NOT NULL,
+      mealTiming TEXT NOT NULL DEFAULT 'anytime',
       startDate TEXT NOT NULL,
       endDate TEXT,
       note TEXT,
@@ -32,5 +33,17 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     CREATE INDEX IF NOT EXISTS idx_dose_logs_scheduled ON dose_logs(scheduledAt);
     CREATE INDEX IF NOT EXISTS idx_dose_logs_med ON dose_logs(medicationId);
   `);
+  // migration: add mealTiming column if missing
+  try {
+    await db.runAsync("ALTER TABLE medications ADD COLUMN mealTiming TEXT NOT NULL DEFAULT 'anytime'");
+  } catch {
+    // column already exists
+  }
+  // migration: add memo column to dose_logs if missing
+  try {
+    await db.runAsync("ALTER TABLE dose_logs ADD COLUMN memo TEXT");
+  } catch {
+    // column already exists
+  }
   return db;
 }

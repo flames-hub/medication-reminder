@@ -32,8 +32,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        await loadSettings();
-        await getDatabase();
+        await Promise.all([loadSettings(), getDatabase()]);
         await loadMedications();
         await loadTodaySchedule();
         if (Constants.appOwnership !== 'expo') {

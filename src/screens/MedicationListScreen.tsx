@@ -7,12 +7,14 @@ import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { PaywallModal } from '../components/PaywallModal';
-import { Card } from '../components/GlassCard';
 import { Spacing, Shadow } from '../constants/theme';
 import { useTheme } from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 const FREE_LIMIT = 3;
+
+const INITIAL_BG_KEYS = ['primaryMuted', 'successMuted', 'warningMuted', 'fill'] as const;
+const INITIAL_COLOR_KEYS = ['primary', 'success', 'warning', 'textSecondary'] as const;
 
 export function MedicationListScreen() {
   const { t } = useTranslation();
@@ -56,36 +58,37 @@ export function MedicationListScreen() {
         data={medications}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
-        renderItem={({ item }) => (
-          <Card style={{ padding: Spacing.md, marginBottom: Spacing.sm }}>
-            <View style={styles.cardRow}>
+        renderItem={({ item, index }) => {
+          const bgKey = INITIAL_BG_KEYS[index % 4];
+          const colorKey = INITIAL_COLOR_KEYS[index % 4];
+          return (
+            <TouchableOpacity
+              style={[styles.row, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}
+              onPress={() => handleEdit(item.id)}
+              onLongPress={() => handleDelete(item.id, item.name)}
+              activeOpacity={0.6}
+              accessibilityRole="button"
+              accessibilityLabel={item.name}
+            >
               {item.photoUri ? (
                 <Image source={{ uri: item.photoUri }} style={styles.photo} />
               ) : (
-                <View style={[styles.iconWrap, { backgroundColor: colors.primaryMuted }]}>
-                  <Ionicons name="medical" size={20} color={colors.primary} />
+                <View style={[styles.initial, { backgroundColor: colors[bgKey] as string }]}>
+                  <Text style={{ color: colors[colorKey] as string, fontSize: fontSize.lg, fontWeight: '700' }}>
+                    {item.name.charAt(0)}
+                  </Text>
                 </View>
               )}
               <View style={styles.info}>
-                <Text style={{ color: colors.text, fontSize: fontSize.lg, fontWeight: '600' }}>{item.name}</Text>
+                <Text style={{ color: colors.text, fontSize: fontSize.md, fontWeight: '600' }}>{item.name}</Text>
                 <Text style={{ color: colors.textSecondary, fontSize: fontSize.sm, marginTop: 2 }}>
-                  {item.dosage} {t(`medication.units.${item.unit}`)} · {t(`medication.${item.frequency}`)}
-                </Text>
-                <Text style={{ color: colors.muted, fontSize: fontSize.sm, marginTop: 1 }}>
-                  {item.times.join(', ')}
+                  {item.dosage} {t(`medication.units.${item.unit}`)} · {t(`medication.${item.frequency}`)} · {item.times.join(', ')}
                 </Text>
               </View>
-              <View style={styles.actions}>
-                <TouchableOpacity onPress={() => handleEdit(item.id)} hitSlop={8} accessibilityLabel={t('common.edit')} accessibilityRole="button">
-                  <Ionicons name="create-outline" size={20} color={colors.textSecondary} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(item.id, item.name)} hitSlop={8} accessibilityLabel={t('common.delete')} accessibilityRole="button">
-                  <Ionicons name="trash-outline" size={20} color={colors.error} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Card>
-        )}
+              <Text style={{ color: colors.muted, fontSize: 20 }}>›</Text>
+            </TouchableOpacity>
+          );
+        }}
         ListEmptyComponent={
           <View style={styles.emptyWrap}>
             <Ionicons name="medkit-outline" size={48} color={colors.muted} />
@@ -119,15 +122,21 @@ export function MedicationListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  list: { padding: Spacing.md, paddingBottom: 80 },
-  cardRow: { flexDirection: 'row', alignItems: 'center' },
-  photo: { width: 44, height: 44, borderRadius: 10, marginRight: Spacing.md },
-  iconWrap: {
-    width: 44, height: 44, borderRadius: 10, marginRight: Spacing.md,
+  list: { paddingBottom: 80 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    gap: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  photo: { width: 44, height: 44, borderRadius: 12, flexShrink: 0 },
+  initial: {
+    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
     alignItems: 'center', justifyContent: 'center',
   },
   info: { flex: 1 },
-  actions: { gap: Spacing.md },
   fab: {
     position: 'absolute', bottom: Spacing.lg, right: Spacing.lg,
     width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center',

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useMedicationStore } from '../store/medicationStore';
 import { MedicationForm } from '../components/MedicationForm';
@@ -19,17 +20,23 @@ export function AddMedicationScreen() {
   const medicationId = route.params?.medicationId;
   const existingMed = medicationId ? medications.find((m) => m.id === medicationId) : undefined;
 
-  navigation.setOptions({
-    title: existingMed ? t('medication.edit') : t('medication.add'),
-  });
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: existingMed ? t('medication.edit') : t('medication.add'),
+    });
+  }, [navigation, existingMed, t]);
 
   async function handleSubmit(data: Omit<Medication, 'id' | 'createdAt'>) {
-    if (existingMed) {
-      await editMedication({ ...existingMed, ...data });
-    } else {
-      await addMedication(data);
+    try {
+      if (existingMed) {
+        await editMedication({ ...existingMed, ...data });
+      } else {
+        await addMedication(data);
+      }
+      navigation.goBack();
+    } catch (e: any) {
+      Alert.alert(t('form.error'), e?.message ?? 'Unknown error');
     }
-    navigation.goBack();
   }
 
   return (

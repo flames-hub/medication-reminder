@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TodayScreen デザイン方向性</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f4f2; font-family: -apple-system, 'Hiragino Sans', sans-serif; padding: 32px 16px; color: #1a1a1a; }
+
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; text-align: center; }
+  .subtitle { font-size: 13px; color: #666; text-align: center; margin-bottom: 32px; }
+
+  .cards { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    width: 320px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.13); }
+  .card.selected { border-color: #4f7ef7; box-shadow: 0 0 0 3px rgba(79,126,247,0.18); }
+  .card.selected::after {
+    content: '✓ 選択中';
+    position: absolute; top: 12px; right: 12px;
+    background: #4f7ef7; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 99px;
+  }
+
+  .card-label {
+    padding: 16px 20px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 2px;
+  }
+  .card-title {
+    padding: 0 20px 12px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  /* ─── DESIGN A: Apothecary ─── */
+  .a-phone { padding: 16px 16px 8px; background: #fffaf5; }
+  .a-header {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .a-date { font-size: 13px; color: #888; }
+  .a-progress-bar-wrap { flex: 1; margin: 0 14px; }
+  .a-progress-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .a-progress-bar { height: 5px; background: #f0ece8; border-radius: 3px; overflow: hidden; }
+  .a-progress-fill { height: 100%; width: 40%; background: #d4935d; border-radius: 3px; }
+  .a-progress-count { font-size: 13px; font-weight: 700; color: #d4935d; white-space: nowrap; }
+
+  .a-section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #b0a090; padding: 6px 4px 4px; display: flex; align-items: center; gap: 6px;
+  }
+  .a-section-label::after { content: ''; flex: 1; height: 1px; background: #ede8e2; }
+
+  .a-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 7px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .a-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .a-pill-icon {
+    width: 38px; height: 38px; border-radius: 8px; background: #fff3e8;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .a-card-name { font-size: 14px; font-weight: 700; color: #2a2018; }
+  .a-card-meta { font-size: 11px; color: #a08870; margin-top: 1px; }
+  .a-take-btn {
+    width: 100%; padding: 8px; border-radius: 8px; background: #d4935d;
+    color: #fff; font-size: 13px; font-weight: 700; text-align: center;
+  }
+  .a-taken-row { display: flex; align-items: center; gap: 5px; color: #7bb87b; font-size: 12px; font-weight: 600; }
+
+  /* ─── DESIGN B: Timeline ─── */
+  .b-phone { padding: 16px 12px 8px; background: #f8f9fb; }
+  .b-header { padding: 0 4px 12px; }
+  .b-date { font-size: 22px; font-weight: 700; color: #111; letter-spacing: -0.5px; }
+  .b-subdate { font-size: 12px; color: #aaa; margin-top: 1px; }
+  .b-remaining { font-size: 12px; color: #5b8ef5; font-weight: 600; margin-top: 4px; }
+
+  .b-timeline { position: relative; padding-left: 52px; }
+  .b-timeline::before { content: ''; position: absolute; left: 28px; top: 0; bottom: 0; width: 1px; background: #e0e4f0; }
+
+  .b-time-block { position: relative; margin-bottom: 16px; }
+  .b-time-dot {
+    position: absolute; left: -29px; top: 6px;
+    width: 9px; height: 9px; border-radius: 50%; background: #c0c8e8; border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #c0c8e8;
+  }
+  .b-time-dot.active { background: #5b8ef5; box-shadow: 0 0 0 3px rgba(91,142,245,0.18); }
+  .b-time-label { font-size: 10px; font-weight: 700; color: #aaa; letter-spacing: 0.08em; margin-bottom: 5px; }
+
+  .b-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .b-item.done { opacity: 0.5; }
+  .b-item-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: #eef1fb;
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+  }
+  .b-item-name { font-size: 13px; font-weight: 600; color: #1a1a2e; flex: 1; }
+  .b-item-dose { font-size: 11px; color: #aaa; }
+  .b-check {
+    width: 28px; height: 28px; border-radius: 50%; background: #eef1fb;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+    color: #5b8ef5; font-weight: 700;
+  }
+  .b-check.done-check { background: #edf8f0; color: #7bb87b; }
+
+  /* ─── DESIGN C: Minimal ─── */
+  .c-phone { padding: 0; background: #fff; border-radius: 0 0 12px 12px; overflow: hidden; }
+  .c-header { background: #e8788a; padding: 20px 18px 16px; color: #fff; }
+  .c-header-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .c-greeting { font-size: 12px; opacity: 0.75; margin-bottom: 2px; }
+  .c-date-big { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .c-donut {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    transform: rotate(-90deg);
+    position: relative;
+  }
+  .c-donut-text { transform: rotate(90deg); }
+  .c-pills-row { display: flex; gap: 6px; }
+  .c-pill-tag {
+    background: rgba(255,255,255,0.2); border-radius: 99px;
+    padding: 3px 10px; font-size: 11px; font-weight: 600; color: #fff;
+  }
+
+  .c-body { padding: 10px 0 8px; }
+  .c-section-header {
+    padding: 8px 18px 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #bbb;
+  }
+  .c-row {
+    padding: 11px 18px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .c-dot { width: 10px; height: 10px; border-radius: 50%; background: #e8788a; flex-shrink: 0; }
+  .c-dot.done-dot { background: #d0d0d0; }
+  .c-row-name { flex: 1; font-size: 14px; font-weight: 500; color: #1a1a1a; }
+  .c-row-name.done-name { color: #bbb; text-decoration: line-through; }
+  .c-row-time { font-size: 12px; color: #bbb; }
+  .c-row-check { font-size: 16px; }
+  .c-take-pill {
+    background: #e8788a; color: #fff; font-size: 12px; font-weight: 700;
+    padding: 5px 12px; border-radius: 99px;
+  }
+
+  .desc { padding: 10px 16px 14px; font-size: 12px; color: #888; line-height: 1.6; border-top: 1px solid #f5f5f5; }
+  .tag { display: inline-block; background: #f0f0f0; color: #666; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 3px; }
+  .tag.plus { background: #e8f3ff; color: #4f7ef7; }
+  .tag.minus { background: #fff0f0; color: #e07070; }
+
+  .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+
+<h1>TodayScreen — デザイン方向性 3案</h1>
+<p class="subtitle">気になる方向性を選んでください（複数可）</p>
+
+<div class="cards">
+
+  <!-- ─── A: Apothecary ─── -->
+  <div class="card" onclick="toggleCard(this, 'A')">
+    <div class="card-label">Option A</div>
+    <div class="card-title">Apothecary — 温かい薬局スタイル</div>
+
+    <div class="a-phone">
+      <!-- Header: no ring, just progress bar -->
+      <div class="a-header">
+        <div>
+          <div class="a-date">4月6日（日）</div>
+        </div>
+        <div class="a-progress-bar-wrap">
+          <div class="a-progress-label">今日の服薬</div>
+          <div class="a-progress-bar"><div class="a-progress-fill"></div></div>
+        </div>
+        <div class="a-progress-count">2 / 5</div>
+      </div>
+
+      <!-- Morning section -->
+      <div class="a-section-label">朝</div>
+      <div class="a-card">
+        <div class="a-card-top">
+          <div class="a-pill-icon">💊</div>
+          <div>
+            <div class="a-card-name">アムロジピン</div>
+            <div class="a-card-meta">1錠 · 08:00 · 食後</div>
+          </div>
+          <div class="a-taken-row">✓ 服用済</div>
+        </div>
+      </div>
+      <div class="a-card">
+        <div class="a-card-top">
+          <div class="a-pill-icon">🔵</div>
+          <div>
+            <div class="a-card-name">メトホルミン</div>
+            <div class="a-card-meta">1錠 · 08:00 · 食後</div>
+          </div>
+        </div>
+        <div class="a-take-btn">服用する</div>
+      </div>
+
+      <!-- Evening section -->
+      <div class="a-section-label">夜</div>
+      <div class="a-card">
+        <div class="a-card-top">
+          <div class="a-pill-icon">🌙</div>
+          <div>
+            <div class="a-card-name">ロスバスタチン</div>
+            <div class="a-card-meta">1錠 · 21:00 · 就寝前</div>
+          </div>
+        </div>
+        <div class="a-take-btn">服用する</div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <span class="tag plus">時間帯グループ</span>
+      <span class="tag plus">フルWidth CTAボタン</span>
+      <span class="tag plus">温かみのある色</span>
+      <span class="tag minus">左ボーダーなし</span>
+      <span class="tag minus">リングなし → バーに変更</span>
+    </div>
+  </div>
+
+  <!-- ─── B: Timeline ─── -->
+  <div class="card" onclick="toggleCard(this, 'B')">
+    <div class="card-label">Option B</div>
+    <div class="card-title">Timeline — 時系列ストリップ</div>
+
+    <div class="b-phone">
+      <div class="b-header">
+        <div class="b-date">今日</div>
+        <div class="b-subdate">2026年4月6日（日）</div>
+        <div class="b-remaining">● あと3回残っています</div>
+      </div>
+
+      <div class="b-timeline">
+        <!-- 8:00 AM -->
+        <div class="b-time-block">
+          <div class="b-time-dot done-check" style="background:#7bb87b"></div>
+          <div class="b-time-label">08:00</div>
+          <div class="b-item done">
+            <div class="b-item-icon">💊</div>
+            <div>
+              <div class="b-item-name">アムロジピン</div>
+              <div class="b-item-dose">1錠 · 食後</div>
+            </div>
+            <div class="b-check done-check">✓</div>
+          </div>
+        </div>
+        <!-- 12:00 -->
+        <div class="b-time-block">
+          <div class="b-time-dot active"></div>
+          <div class="b-time-label">12:00</div>
+          <div class="b-item">
+            <div class="b-item-icon">🔵</div>
+            <div>
+              <div class="b-item-name">メトホルミン</div>
+              <div class="b-item-dose">1錠 · 食後</div>
+            </div>
+            <div class="b-check">→</div>
+          </div>
+        </div>
+        <!-- 21:00 -->
+        <div class="b-time-block">
+          <div class="b-time-dot"></div>
+          <div class="b-time-label">21:00</div>
+          <div class="b-item">
+            <div class="b-item-icon">🌙</div>
+            <div>
+              <div class="b-item-name">ロスバスタチン</div>
+              <div class="b-item-dose">1錠 · 就寝前</div>
+            </div>
+            <div class="b-check">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <span class="tag plus">時系列軸で直感的</span>
+      <span class="tag plus">カード左タップで服用</span>
+      <span class="tag plus">カレンダーアプリっぽい</span>
+      <span class="tag minus">左ボーダーなし</span>
+      <span class="tag minus">ProgressRingなし</span>
+    </div>
+  </div>
+
+  <!-- ─── C: Minimal ─── -->
+  <div class="card" onclick="toggleCard(this, 'C')">
+    <div class="card-label">Option C</div>
+    <div class="card-title">Minimal — Apple Health風</div>
+
+    <div class="c-phone">
+      <div class="c-header">
+        <div class="c-header-top">
+          <div>
+            <div class="c-greeting">おはようございます</div>
+            <div class="c-date-big">4月6日（日）</div>
+          </div>
+          <div class="c-donut"><span class="c-donut-text">2/5</span></div>
+        </div>
+        <div class="c-pills-row">
+          <div class="c-pill-tag">残り3回</div>
+          <div class="c-pill-tag">✓ 2回完了</div>
+        </div>
+      </div>
+
+      <div class="c-body">
+        <div class="c-section-header">朝 — 08:00</div>
+        <div class="c-row">
+          <div class="c-dot done-dot"></div>
+          <div class="c-row-name done-name">アムロジピン 1錠</div>
+          <div class="c-row-time">済</div>
+          <div class="c-row-check">✓</div>
+        </div>
+        <div class="c-row">
+          <div class="c-dot done-dot"></div>
+          <div class="c-row-name done-name">メトホルミン 1錠</div>
+          <div class="c-row-time">済</div>
+          <div class="c-row-check">✓</div>
+        </div>
+
+        <div class="c-section-header" style="margin-top:6px">昼 — 12:00</div>
+        <div class="c-row">
+          <div class="c-dot"></div>
+          <div class="c-row-name">ビタミンD 2錠</div>
+          <div class="c-row-time">12:00</div>
+          <div class="c-take-pill">服用</div>
+        </div>
+
+        <div class="c-section-header" style="margin-top:6px">夜 — 21:00</div>
+        <div class="c-row">
+          <div class="c-dot" style="background:#8b7ec8"></div>
+          <div class="c-row-name">ロスバスタチン 1錠</div>
+          <div class="c-row-time">21:00</div>
+          <div class="c-take-pill" style="background:#8b7ec8">服用</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <span class="tag plus">超ミニマル・Apple風</span>
+      <span class="tag plus">カラーアクセントを時間帯で変化</span>
+      <span class="tag plus">ヘッダーはカラー背景で個性</span>
+      <span class="tag minus">情報密度が高め</span>
+      <span class="tag minus">小さいフォントに注意</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">選んだらターミナルで教えてください</div>
+
+<script>
+function toggleCard(el, id) {
+  el.classList.toggle('selected');
+  console.log('selected:', id);
+}
+</script>
+</body>
+</html>

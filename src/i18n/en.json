@@ -11,7 +11,19 @@
     "skip": "Skip",
     "empty": "No meds scheduled today",
     "emptyHint": "Add medications in the Meds tab to get started",
-    "instruction": "Tap \"Take\" when you've taken your medication"
+    "instruction": "Tap \"Take\" when you've taken your medication",
+    "schedule": "Today's schedule",
+    "remaining": "{{count}} remaining",
+    "doneCount": "{{count}} taken",
+    "skippedCount": "{{count}} skipped",
+    "nextDose": "Up next",
+    "greetMorning": "Good morning",
+    "greetAfternoon": "Good afternoon",
+    "greetEvening": "Good evening",
+    "ringStart": "Let's go!",
+    "ringKeepGoing": "Keep going!",
+    "ringAlmost": "Almost there!",
+    "ringDone": "All done!"
   },
   "medication": {
     "add": "Add Medication",
@@ -29,7 +41,8 @@
     "addTime": "Add Time",
     "startDate": "Start Date",
     "endDate": "End Date (optional)",
-    "note": "Note (e.g., after meals)",
+    "mealTiming": "Timing",
+    "note": "Note",
     "units": { "mg": "mg", "ml": "ml", "tablet": "tablet", "capsule": "capsule", "drop": "drop", "other": "other" },
     "weekdays": { "0": "Sun", "1": "Mon", "2": "Tue", "3": "Wed", "4": "Thu", "5": "Fri", "6": "Sat" }
   },
@@ -54,7 +67,12 @@
     "adherence": "Adherence: {{percent}}%",
     "adherenceHint": "Tap a date to see details for that day",
     "tapHint": "Tap any date on the calendar",
-    "legend": { "allTaken": "All taken", "partial": "Partial", "allMissed": "Missed", "none": "No meds" }
+    "legend": { "allTaken": "All taken", "partial": "Partial", "allMissed": "Missed", "none": "No meds" },
+    "detail": "Details for this day",
+    "noSchedule": "No medications were scheduled",
+    "memo": "Memo",
+    "memoPlaceholder": "How you felt, notes, etc.",
+    "saved": "Saved"
   },
   "settings": {
     "title": "Settings",
@@ -86,6 +104,13 @@
     "purchase": "Subscribe — {{price}}/mo",
     "restore": "Restore Purchase",
     "terms": "By subscribing, you agree to our Terms of Use and Privacy Policy. Subscriptions auto-renew and will be charged unless cancelled at least 24 hours before the renewal date."
+  },
+  "timing": {
+    "before_meal": "Before meal",
+    "after_meal": "After meal",
+    "between_meals": "Between meals",
+    "before_bed": "Before bed",
+    "anytime": "Anytime"
   },
   "common": { "cancel": "Cancel", "save": "Save", "delete": "Delete", "edit": "Edit", "done": "Done" }
 }

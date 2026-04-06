@@ -53,9 +53,9 @@ function TabNavigator() {
         headerShadowVisible: false,
       })}
     >
-      <Tab.Screen name="Today" component={TodayScreen} options={{ title: t('tabs.today'), tabBarLabel: t('tabs.today') }} />
+      <Tab.Screen name="Today" component={TodayScreen} options={{ headerShown: false, tabBarLabel: t('tabs.today') }} />
       <Tab.Screen name="MedicationList" component={MedicationListScreen} options={{ title: t('tabs.medications'), tabBarLabel: t('tabs.medications') }} />
-      <Tab.Screen name="History" component={HistoryScreen} options={{ title: t('tabs.history'), tabBarLabel: t('tabs.history') }} />
+      <Tab.Screen name="History" component={HistoryScreen} options={{ headerShown: false, tabBarLabel: t('tabs.history') }} />
       <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: t('tabs.settings'), tabBarLabel: t('tabs.settings') }} />
     </Tab.Navigator>
   );

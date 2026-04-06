@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medication Reminder — Full Redesign Mockup</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #1a1a1a;
+  font-family: -apple-system, 'Hiragino Sans', sans-serif;
+  padding: 40px 24px;
+  color: #fff;
+}
+
+h1 { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.page-sub { font-size: 12px; color: #888; text-align: center; margin-bottom: 36px; }
+
+.screen-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* ── Phone shell ── */
+.phone {
+  width: 280px;
+  background: #fff;
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  flex-shrink: 0;
+}
+.phone-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Status bar */
+.status-bar {
+  height: 44px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 24px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status-bar.dark { color: rgba(255,255,255,0.9); }
+.status-bar.light { color: #111; }
+.status-bar .time { font-size: 13px; font-weight: 700; }
+.status-bar .icons { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+
+/* ── TODAY SCREEN ── */
+.today-header {
+  background: #E8788A;
+  padding: 0 20px 16px;
+}
+.today-header-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.today-greeting { font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+.today-date { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; line-height: 1.2; }
+.today-donut {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: transparent;
+  border: 3px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+.today-donut::before {
+  content: '';
+  position: absolute;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #fff;
+  border-right-color: #fff;
+  top: -3px; left: -3px;
+}
+.today-donut-text { font-size: 11px; font-weight: 700; color: #fff; }
+.today-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.today-tag {
+  background: rgba(255,255,255,0.2);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 11px; font-weight: 600; color: #fff;
+}
+
+.today-body { background: #FFF8F9; flex: 1; padding: 0 0 8px; }
+.section-header {
+  padding: 10px 18px 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #C0A0A5;
+}
+.dose-row {
+  padding: 11px 18px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid #F5EEF0;
+  background: #fff;
+}
+.dose-dot { width: 9px; height: 9px; border-radius: 50%; background: #E8788A; flex-shrink: 0; }
+.dose-dot.done { background: #ddd; }
+.dose-name { flex: 1; font-size: 13px; font-weight: 600; color: #2a1820; }
+.dose-name.done { color: #ccc; text-decoration: line-through; }
+.dose-time { font-size: 11px; color: #c0a0a5; margin-right: 4px; }
+.dose-btn {
+  background: #E8788A; color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 99px;
+  white-space: nowrap;
+}
+.dose-check { color: #7bb87b; font-size: 16px; font-weight: 700; }
+.today-section-gap { height: 6px; background: #FFF8F9; }
+
+/* ── MEDICATION LIST ── */
+.list-header-bar {
+  background: #fff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #F0ECF0;
+}
+.list-title { font-size: 17px; font-weight: 700; color: #111; }
+.list-add-btn {
+  background: #E8788A; color: #fff;
+  border-radius: 99px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700;
+}
+.med-row {
+  padding: 12px 18px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid #F5F0F2;
+  background: #fff;
+}
+.med-initial {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #FDEEF1; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #E8788A; flex-shrink: 0;
+}
+.med-initial.mint { background: #E8F5F5; color: #5CAAAB; }
+.med-initial.purple { background: #F0EDFB; color: #8B7EC8; }
+.med-info { flex: 1; }
+.med-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.med-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+.med-chevron { color: #ddd; font-size: 14px; }
+.fab {
+  position: relative;
+  margin: 16px auto 0;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #E8788A;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 24px; font-weight: 300;
+  box-shadow: 0 4px 12px rgba(232,120,138,0.4);
+}
+
+/* ── HISTORY ── */
+.history-header {
+  background: #E8788A;
+  padding: 0 20px 16px;
+}
+.history-header-inner {
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.history-title { font-size: 20px; font-weight: 700; color: #fff; }
+.adherence-big { font-size: 28px; font-weight: 700; color: #fff; }
+.adherence-label { font-size: 11px; color: rgba(255,255,255,0.7); }
+.calendar-wrap { background: #fff; padding: 12px 14px; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-month { font-size: 13px; font-weight: 700; color: #333; }
+.cal-arrow { font-size: 16px; color: #ccc; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-day {
+  aspect-ratio: 1; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #bbb;
+}
+.cal-day.taken { background: #e8f5ef; color: #5aa07a; font-weight: 700; }
+.cal-day.partial { background: #fff5e8; color: #d4935d; font-weight: 700; }
+.cal-day.missed { background: #fdf0f0; color: #d47070; font-weight: 700; }
+.cal-day.today-mark { border: 1.5px solid #E8788A; color: #E8788A; font-weight: 700; }
+.cal-day.hd { color: #aaa; font-size: 9px; font-weight: 600; }
+.legend-row { display: flex; gap: 10px; padding: 6px 14px 10px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #aaa; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── SETTINGS ── */
+.settings-section-title {
+  padding: 14px 18px 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #aaa;
+}
+.settings-row {
+  padding: 13px 18px;
+  display: flex; align-items: center;
+  border-bottom: 1px solid #F5F5F5;
+  background: #fff;
+}
+.settings-row-label { flex: 1; font-size: 14px; color: #1a1a1a; }
+.settings-row-value { font-size: 13px; color: #aaa; }
+.theme-swatches { display: flex; gap: 10px; padding: 12px 18px 14px; background: #fff; }
+.swatch {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.swatch.selected { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #E8788A; }
+.toggle {
+  width: 36px; height: 20px; border-radius: 10px; background: #E8788A;
+  display: flex; align-items: center; padding: 0 2px;
+}
+.toggle-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: #fff;
+  margin-left: auto;
+}
+.toggle.off { background: #ddd; }
+.toggle.off .toggle-thumb { margin-left: 2px; }
+
+.settings-footer {
+  padding: 20px 18px 8px;
+  font-size: 11px; color: #ccc; text-align: center; line-height: 1.6;
+}
+
+/* ── TAB BAR ── */
+.tab-bar {
+  background: #fff;
+  border-top: 1px solid #F0ECF0;
+  display: flex;
+  padding: 8px 0 12px;
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  font-size: 9px; color: #ccc; font-weight: 500;
+}
+.tab.active { color: #E8788A; }
+.tab-icon { font-size: 20px; }
+
+/* ── ADD SCREEN ── */
+.modal-header {
+  background: #fff;
+  padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #F0ECF0;
+}
+.modal-title { font-size: 17px; font-weight: 700; color: #111; }
+.modal-close { font-size: 13px; color: #aaa; }
+.form-section { padding: 0; }
+.form-field {
+  background: #fff;
+  padding: 12px 18px;
+  border-bottom: 1px solid #F5F5F5;
+  display: flex; align-items: center;
+}
+.field-label { font-size: 12px; color: #aaa; width: 68px; flex-shrink: 0; }
+.field-value { font-size: 14px; color: #1a1a1a; flex: 1; }
+.field-value.placeholder { color: #ddd; }
+.save-btn {
+  margin: 16px; padding: 14px;
+  background: #E8788A; border-radius: 12px;
+  text-align: center; color: #fff; font-size: 15px; font-weight: 700;
+}
+
+.section-divider { height: 8px; background: #F8F4F5; }
+
+/* Design note callouts */
+.callout-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+.callout {
+  background: #2a2a2a; border-radius: 12px; padding: 14px 18px;
+  max-width: 320px;
+}
+.callout-title { font-size: 12px; font-weight: 700; color: #E8788A; margin-bottom: 6px; }
+.callout-body { font-size: 12px; color: #aaa; line-height: 1.6; }
+.callout-body li { margin-left: 14px; margin-bottom: 3px; }
+
+.section-heading { font-size: 14px; font-weight: 700; color: #eee; text-align: center; margin-bottom: 16px; }
+
+/* Color palette preview */
+.palette-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+.palette-card { background: #2a2a2a; border-radius: 12px; padding: 14px 16px; min-width: 200px; }
+.palette-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+.palette-swatches { display: flex; gap: 6px; }
+.p-swatch { width: 28px; height: 28px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<h1>Medication Reminder — 全画面リデザイン</h1>
+<p class="page-sub">Option C: Minimal / Apple Health Style · フルブリードヘッダー · インライン服用ボタン</p>
+
+<!-- ── SCREEN ROW 1 ── -->
+<p class="section-heading">公開画面（さくらテーマ）</p>
+<div class="screen-row">
+
+  <!-- TODAY -->
+  <div>
+    <p class="phone-label">Today</p>
+    <div class="phone">
+      <div class="today-header">
+        <div class="status-bar dark"><span class="time">9:41</span><span class="icons">●●● ▲ 100%</span></div>
+        <div class="today-header-inner">
+          <div>
+            <div class="today-greeting">おはようございます</div>
+            <div class="today-date">4月6日<br>日曜日</div>
+          </div>
+          <div class="today-donut"><span class="today-donut-text">2/5</span></div>
+        </div>
+        <div class="today-tags">
+          <div class="today-tag">残り 3回</div>
+          <div class="today-tag">✓ 2回完了</div>
+        </div>
+      </div>
+
+      <div class="today-body">
+        <div class="section-header">朝 · 08:00</div>
+        <div class="dose-row">
+          <div class="dose-dot done"></div>
+          <div class="dose-name done">アムロジピン 1錠</div>
+          <div class="dose-time">08:00</div>
+          <div class="dose-check">✓</div>
+        </div>
+        <div class="dose-row">
+          <div class="dose-dot done"></div>
+          <div class="dose-name done">メトホルミン 1錠</div>
+          <div class="dose-time">08:00</div>
+          <div class="dose-check">✓</div>
+        </div>
+
+        <div class="today-section-gap"></div>
+        <div class="section-header">昼 · 12:00</div>
+        <div class="dose-row">
+          <div class="dose-dot"></div>
+          <div class="dose-name">ビタミンD 2錠</div>
+          <div class="dose-time">12:00</div>
+          <div class="dose-btn">服用</div>
+        </div>
+
+        <div class="today-section-gap"></div>
+        <div class="section-header">夜 · 21:00</div>
+        <div class="dose-row" style="border-bottom:none">
+          <div class="dose-dot" style="background:#8B7EC8"></div>
+          <div class="dose-name">ロスバスタチン 1錠</div>
+          <div class="dose-time">21:00</div>
+          <div class="dose-btn" style="background:#8B7EC8">服用</div>
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab active"><span class="tab-icon">☀️</span>今日</div>
+        <div class="tab"><span class="tab-icon">💊</span>薬</div>
+        <div class="tab"><span class="tab-icon">📅</span>履歴</div>
+        <div class="tab"><span class="tab-icon">⚙️</span>設定</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MED LIST -->
+  <div>
+    <p class="phone-label">薬一覧</p>
+    <div class="phone">
+      <div style="background:#fff">
+        <div class="status-bar light"><span class="time">9:41</span><span class="icons">●●● ▲ 100%</span></div>
+        <div class="list-header-bar">
+          <div class="list-title">薬の管理</div>
+          <div class="list-add-btn">+ 追加</div>
+        </div>
+      </div>
+      <div style="background:#F8F4F5; padding: 8px 0 0;">
+        <div class="med-row">
+          <div class="med-initial">ア</div>
+          <div class="med-info">
+            <div class="med-name">アムロジピン</div>
+            <div class="med-sub">1錠 · 毎日 · 08:00</div>
+          </div>
+          <div class="med-chevron">›</div>
+        </div>
+        <div class="med-row">
+          <div class="med-initial mint">メ</div>
+          <div class="med-info">
+            <div class="med-name">メトホルミン</div>
+            <div class="med-sub">1錠 · 毎日 · 08:00, 21:00</div>
+          </div>
+          <div class="med-chevron">›</div>
+        </div>
+        <div class="med-row">
+          <div class="med-initial" style="background:#FFF3E8;color:#D4935D">ビ</div>
+          <div class="med-info">
+            <div class="med-name">ビタミンD</div>
+            <div class="med-sub">2錠 · 毎日 · 12:00</div>
+          </div>
+          <div class="med-chevron">›</div>
+        </div>
+        <div class="med-row" style="border-bottom:none">
+          <div class="med-initial purple">ロ</div>
+          <div class="med-info">
+            <div class="med-name">ロスバスタチン</div>
+            <div class="med-sub">1錠 · 毎日 · 21:00</div>
+          </div>
+          <div class="med-chevron">›</div>
+        </div>
+        <div class="fab">＋</div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">☀️</span>今日</div>
+        <div class="tab active"><span class="tab-icon">💊</span>薬</div>
+        <div class="tab"><span class="tab-icon">📅</span>履歴</div>
+        <div class="tab"><span class="tab-icon">⚙️</span>設定</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div>
+    <p class="phone-label">履歴</p>
+    <div class="phone">
+      <div class="today-header" style="background:#E8788A">
+        <div class="status-bar dark"><span class="time">9:41</span><span class="icons">●●● ▲ 100%</span></div>
+        <div class="history-header-inner">
+          <div>
+            <div class="today-greeting">今月の服薬率</div>
+            <div class="adherence-big">87%</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:rgba(255,255,255,0.7)">2026年4月</div>
+            <div style="color:#fff;font-size:20px;margin-top:4px">◀ ▶</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-wrap">
+        <div class="cal-grid">
+          <div class="cal-day hd">日</div><div class="cal-day hd">月</div><div class="cal-day hd">火</div><div class="cal-day hd">水</div><div class="cal-day hd">木</div><div class="cal-day hd">金</div><div class="cal-day hd">土</div>
+          <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day taken">1</div><div class="cal-day taken">2</div><div class="cal-day taken">3</div><div class="cal-day partial">4</div><div class="cal-day taken">5</div>
+          <div class="cal-day today-mark">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div>
+          <div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div>
+          <div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div>
+          <div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div>
+        </div>
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-dot" style="background:#6BBF8A"></div>完了</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#E8A85C"></div>一部</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#D96B6B"></div>未服薬</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ddd"></div>予定なし</div>
+        </div>
+      </div>
+      <div style="padding:8px 16px 4px; font-size:11px; color:#bbb; text-align:center; background:#F8F4F5;">日付をタップして詳細を確認</div>
+
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">☀️</span>今日</div>
+        <div class="tab"><span class="tab-icon">💊</span>薬</div>
+        <div class="tab active"><span class="tab-icon">📅</span>履歴</div>
+        <div class="tab"><span class="tab-icon">⚙️</span>設定</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div>
+    <p class="phone-label">設定</p>
+    <div class="phone">
+      <div style="background:#fff">
+        <div class="status-bar light"><span class="time">9:41</span><span class="icons">●●● ▲ 100%</span></div>
+        <div class="list-header-bar">
+          <div class="list-title">設定</div>
+        </div>
+      </div>
+
+      <div style="background:#F8F4F5; overflow:auto; max-height:460px;">
+        <div class="settings-section-title">テーマカラー</div>
+        <div class="theme-swatches">
+          <div class="swatch selected" style="background:#E8788A" title="さくら">🌸</div>
+          <div class="swatch" style="background:#5CAAAB" title="みんと">🌿</div>
+          <div class="swatch" style="background:#D4935D" title="はちみつ">🍯</div>
+          <div class="swatch" style="background:#2a2a2a; border:2px solid #555" title="ダーク">🌙</div>
+        </div>
+
+        <div class="settings-section-title">通知</div>
+        <div class="settings-row">
+          <div class="settings-row-label">服薬リマインダー</div>
+          <div class="toggle"><div class="toggle-thumb"></div></div>
+        </div>
+
+        <div class="settings-section-title">表示</div>
+        <div class="settings-row">
+          <div class="settings-row-label">文字サイズ</div>
+          <div class="settings-row-value">標準 ›</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-label">言語</div>
+          <div class="settings-row-value">日本語 ›</div>
+        </div>
+
+        <div class="settings-section-title">Pro</div>
+        <div class="settings-row" style="border-bottom:none">
+          <div class="settings-row-label">Medication Reminder Pro</div>
+          <div style="background:#E8788A;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px">アップグレード</div>
+        </div>
+
+        <div class="settings-footer">
+          プライバシーポリシー · 利用規約<br>v1.0.0
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">☀️</span>今日</div>
+        <div class="tab"><span class="tab-icon">💊</span>薬</div>
+        <div class="tab"><span class="tab-icon">📅</span>履歴</div>
+        <div class="tab active"><span class="tab-icon">⚙️</span>設定</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD MODAL -->
+  <div>
+    <p class="phone-label">薬追加（モーダル）</p>
+    <div class="phone">
+      <div style="background:#fff">
+        <div class="status-bar light"><span class="time">9:41</span><span class="icons">●●● ▲ 100%</span></div>
+        <div class="modal-header">
+          <div class="modal-close">キャンセル</div>
+          <div class="modal-title">薬を追加</div>
+          <div class="modal-close" style="color:#E8788A;font-weight:700">保存</div>
+        </div>
+      </div>
+
+      <div style="background:#F8F4F5; overflow:auto; max-height:430px;">
+        <div class="settings-section-title">基本情報</div>
+        <div class="form-field">
+          <div class="field-label">薬の名前</div>
+          <div class="field-value placeholder">例: アムロジピン</div>
+        </div>
+        <div class="form-field">
+          <div class="field-label">用量</div>
+          <div class="field-value placeholder">1</div>
+          <div style="font-size:12px;color:#aaa">錠</div>
+        </div>
+        <div class="form-field" style="border-bottom:none">
+          <div class="field-label">食事との関係</div>
+          <div class="field-value" style="color:#aaa">食後 ›</div>
+        </div>
+
+        <div class="settings-section-title">服用スケジュール</div>
+        <div class="form-field">
+          <div class="field-label">頻度</div>
+          <div class="field-value" style="color:#aaa">毎日 ›</div>
+        </div>
+        <div class="form-field" style="border-bottom:none">
+          <div class="field-label">時刻</div>
+          <div class="field-value" style="color:#aaa">08:00 ›</div>
+        </div>
+
+        <div class="settings-section-title">写真（任意）</div>
+        <div class="form-field" style="border-bottom:none; justify-content:center;">
+          <div style="width:60px;height:60px;border-radius:12px;background:#F0ECF0;display:flex;align-items:center;justify-content:center;font-size:24px;color:#ddd">📷</div>
+        </div>
+
+        <div class="save-btn">保存する</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── COLOR PALETTES ── -->
+<p class="section-heading">テーマカラー更新案</p>
+<div class="palette-row">
+  <div class="palette-card">
+    <div class="palette-name">🌸 さくら（更新）</div>
+    <div class="palette-swatches">
+      <div class="p-swatch" style="background:#E8788A" title="primary"></div>
+      <div class="p-swatch" style="background:#FFF8F9" title="background"></div>
+      <div class="p-swatch" style="background:#F5EEF0" title="surface"></div>
+      <div class="p-swatch" style="background:#6BBF8A" title="success"></div>
+      <div class="p-swatch" style="background:#E8A85C" title="warning"></div>
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:6px">ヘッダー: #E8788A（現状維持）</div>
+  </div>
+  <div class="palette-card">
+    <div class="palette-name">🌿 みんと（更新）</div>
+    <div class="palette-swatches">
+      <div class="p-swatch" style="background:#3D9EA0" title="primary（濃く）"></div>
+      <div class="p-swatch" style="background:#F2FAFA" title="background"></div>
+      <div class="p-swatch" style="background:#E8F5F5" title="surface"></div>
+      <div class="p-swatch" style="background:#5AA87A" title="success"></div>
+      <div class="p-swatch" style="background:#D4935D" title="warning"></div>
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:6px">ヘッダー: #3D9EA0（やや濃く調整）</div>
+  </div>
+  <div class="palette-card">
+    <div class="palette-name">🍯 はちみつ（更新）</div>
+    <div class="palette-swatches">
+      <div class="p-swatch" style="background:#C47A3A" title="primary（濃く）"></div>
+      <div class="p-swatch" style="background:#FFFAF3" title="background"></div>
+      <div class="p-swatch" style="background:#FFF3E5" title="surface"></div>
+      <div class="p-swatch" style="background:#6A9E6A" title="success"></div>
+      <div class="p-swatch" style="background:#D4A84A" title="warning"></div>
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:6px">ヘッダー: #C47A3A（読みやすく調整）</div>
+  </div>
+  <div class="palette-card">
+    <div class="palette-name">🌙 ダーク（更新）</div>
+    <div class="palette-swatches">
+      <div class="p-swatch" style="background:#f59e0b" title="primary"></div>
+      <div class="p-swatch" style="background:#0b0a09" title="background"></div>
+      <div class="p-swatch" style="background:#1e1c18" title="surface"></div>
+      <div class="p-swatch" style="background:#22c55e" title="success"></div>
+      <div class="p-swatch" style="background:#f59e0b" title="warning"></div>
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:6px">ヘッダー: #1e1c18（ダーク維持）</div>
+  </div>
+</div>
+
+<!-- ── DESIGN NOTES ── -->
+<p class="section-heading">変更点サマリー</p>
+<div class="callout-row">
+  <div class="callout">
+    <div class="callout-title">TodayScreen + DoseCard</div>
+    <div class="callout-body"><ul>
+      <li>フルブリードカラーヘッダー（SafeAreaView）</li>
+      <li>ProgressRing → 小さいドーナツ（右上）</li>
+      <li>チップ行 → シンプルなタグ2個</li>
+      <li>Card+borderLeft → 行リスト（区切り線のみ）</li>
+      <li>時間帯グループ（朝/昼/夜）セクション</li>
+      <li>服用ボタン → インラインカプセル</li>
+    </ul></div>
+  </div>
+  <div class="callout">
+    <div class="callout-title">MedicationListScreen</div>
+    <div class="callout-body"><ul>
+      <li>Card+アイコン枠 → イニシャル円</li>
+      <li>薬ごとにテーマ色から派生した色</li>
+      <li>編集/削除アイコン → シェブロン（詳細画面へ）</li>
+      <li>FAB はそのまま残す</li>
+    </ul></div>
+  </div>
+  <div class="callout">
+    <div class="callout-title">HistoryScreen</div>
+    <div class="callout-body"><ul>
+      <li>服薬率カード → フルブリードヘッダーに統合</li>
+      <li>CalendarHeatmap はそのまま保持</li>
+      <li>凡例をコンパクトに整理</li>
+      <li>デイリー詳細モーダルはスタイルのみ更新</li>
+    </ul></div>
+  </div>
+  <div class="callout">
+    <div class="callout-title">SettingsScreen + テーマ</div>
+    <div class="callout-body"><ul>
+      <li>テーマ選択 → 色付き丸スウォッチ</li>
+      <li>設定行 → iOS標準スタイル（ラベル+値/トグル）</li>
+      <li>各テーマのprimary色をヘッダー背景に使用</li>
+      <li>ダークテーマのみヘッダー暗色</li>
+    </ul></div>
+  </div>
+</div>
+
+</body>
+</html>

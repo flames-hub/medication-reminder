@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { Radius } from '../constants/theme';
-import { Card } from './GlassCard';
+import { Radius, Shadow } from '../constants/theme';
 import { DayStatus } from '../types';
 import { useTheme } from '../hooks/useTheme';
 
@@ -38,7 +37,7 @@ export function CalendarHeatmap({ dayStatuses, onDayPress, currentMonth, onMonth
   );
 
   return (
-    <Card style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderRadius: Radius.md }, Shadow.md]}>
       <Calendar
         current={`${currentMonth}-01`}
         markingType="custom"
@@ -56,7 +55,7 @@ export function CalendarHeatmap({ dayStatuses, onDayPress, currentMonth, onMonth
           selectedDayBackgroundColor: colors.primary,
         }}
       />
-    </Card>
+    </View>
   );
 }
 
